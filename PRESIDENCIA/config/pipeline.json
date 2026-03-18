@@ -1,0 +1,16 @@
+{
+  "area_id": "PRESIDENCIA",
+  "paths": {
+    "pbix_in": "PBIXs",
+    "pbix_descompuestos": "PBIXs_descompuestos",
+    "output": "PBIXs_output",
+    "log_file": "proceso_pbix.log"
+  },
+  "procesamiento": {
+    "incluir_patrones": [],
+    "excluir_patrones": []
+  },
+  "exportacion": {
+    "formato_salida": "excel"
+  }
+}

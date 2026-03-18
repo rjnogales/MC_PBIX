@@ -1,0 +1,50 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# =========================
+# Virtual environments
+# =========================
+.venv/
+venv/
+env/
+
+# =========================
+# Environment and secrets
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Logs and temp files
+# =========================
+*.log
+~$*
+*.tmp
+
+# =========================
+# OS/editor noise
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# PBIX pipeline artifacts
+# Keep area configs tracked, ignore heavy/generated content.
+# =========================
+PBIXs_descompuestos/
+PBIXs_output/
+proceso_pbix.log
+
+*/PBIXs_descompuestos/
+*/PBIXs_output/
+*/proceso_pbix.log
