@@ -1,3 +1,5 @@
+"""Orquestador principal para procesar PBIX por area y generar catalogos Excel."""
+
 from pathlib import Path
 import subprocess
 import pandas as pd
@@ -13,7 +15,7 @@ from datetime import datetime
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = SCRIPT_DIR.parent
 
-AREA_ID_MANUAL = ""  # Ej: "PRESIDENCIA" para forzar el area.
+AREA_ID_MANUAL = ""  # Ej: "OFICINA_PRESIDENCIA" para forzar el area.
 AREA_ID_DEFAULT = "OFICINA_EVALUACION"
 AREA_ID = (
     AREA_ID_MANUAL.strip()
@@ -35,6 +37,7 @@ DEFAULT_CONFIG = {
 
 
 def cargar_config_area(config_file):
+    """Carga y valida la configuracion de area desde config/pipeline.json."""
     config = {
         "area_id": DEFAULT_CONFIG["area_id"],
         "paths": dict(DEFAULT_CONFIG["paths"]),
@@ -66,6 +69,7 @@ def cargar_config_area(config_file):
 
 
 def resolver_ruta_area(base_dir, path_value):
+    """Resuelve rutas relativas al directorio del area activa."""
     ruta = Path(path_value)
     if ruta.is_absolute():
         return ruta
@@ -86,6 +90,7 @@ LOG_FILE = resolver_ruta_area(AREA_DIR, AREA_CONFIG["paths"]["log_file"])
 # LOGGING SIMPLE
 # =========================
 def log(mensaje):
+    """Escribe mensaje en consola y en el archivo de log del area."""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     linea = f"[{timestamp}] {mensaje}"
 
@@ -100,6 +105,7 @@ def log(mensaje):
 # UTIL
 # =========================
 def cargar_funcion(script, funcion):
+    """Carga dinamicamente una funcion desde otro script en zCODE."""
     spec = importlib.util.spec_from_file_location(script, SCRIPT_DIR / script)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -107,6 +113,7 @@ def cargar_funcion(script, funcion):
 
 
 def construir_firma_pbix(pbix_file):
+    """Construye una firma de control para detectar cambios en el PBIX."""
     stats = pbix_file.stat()
     return {
         "pbix_name": pbix_file.name,
@@ -117,6 +124,7 @@ def construir_firma_pbix(pbix_file):
 
 
 def leer_metadata_extraccion(destino):
+    """Lee metadata de extraccion previa si existe y es valida."""
     meta_file = destino / EXTRACT_META_FILENAME
 
     if not meta_file.exists():
@@ -131,6 +139,7 @@ def leer_metadata_extraccion(destino):
 
 
 def guardar_metadata_extraccion(destino, firma_pbix):
+    """Guarda metadata de extraccion para reutilizacion incremental."""
     meta_file = destino / EXTRACT_META_FILENAME
 
     payload = {
@@ -143,6 +152,7 @@ def guardar_metadata_extraccion(destino, firma_pbix):
 
 
 def metadata_corresponde_pbix(metadata, firma_pbix):
+    """Valida si la metadata corresponde exactamente al PBIX actual."""
     return (
         metadata.get("pbix_name") == firma_pbix["pbix_name"]
         and str(metadata.get("pbix_path", "")).casefold() == firma_pbix["pbix_path"].casefold()
@@ -152,6 +162,7 @@ def metadata_corresponde_pbix(metadata, firma_pbix):
 
 
 def eliminar_descomposicion(destino):
+    """Elimina una carpeta de descomposicion previa."""
     try:
         shutil.rmtree(destino)
         return True
@@ -161,6 +172,7 @@ def eliminar_descomposicion(destino):
 
 
 def referencia_mtime_descomposicion(destino):
+    """Obtiene referencia temporal para comparar vigencia de descomposicion."""
     version_file = destino / "Version.txt"
 
     if version_file.exists():
@@ -170,6 +182,7 @@ def referencia_mtime_descomposicion(destino):
 
 
 def ejecutar_extract_pbitools(pbix_file, destino):
+    """Ejecuta pbi-tools extract y retorna la ruta final de descomposicion."""
     # pbi-tools Desktop 1.2.0 no acepta -o; extrae por defecto junto al PBIX.
     salida_default = pbix_file.with_suffix("")
 
@@ -204,6 +217,7 @@ def ejecutar_extract_pbitools(pbix_file, destino):
 # PBI-TOOLS
 # =========================
 def descomponer_pbix(pbix_file):
+    """Reutiliza descomposicion vigente o extrae nuevamente cuando hay cambios."""
     destino = DESCOMP_DIR / pbix_file.stem
     salida_default = pbix_file.with_suffix("")
     candidatos = [destino]
@@ -270,6 +284,7 @@ def descomponer_pbix(pbix_file):
 # PROCESAR UN PBIX
 # =========================
 def procesar_pbix(pbix_file, leer_tablas, leer_columnas, leer_medidas, leer_relaciones, exportar_excel, indice=None, total=None):
+    """Procesa un PBIX: descompone, extrae metadatos y exporta Excel."""
 
     if indice is not None and total is not None:
         log(f"🚀 [{indice}/{total}] Procesando: {pbix_file.name}")
@@ -320,6 +335,7 @@ def procesar_pbix(pbix_file, leer_tablas, leer_columnas, leer_medidas, leer_rela
 # MAIN
 # =========================
 def main():
+    """Punto de entrada del proceso masivo por area activa."""
 
     log("======================================")
     log("🚀 INICIO PROCESO MASIVO PBIX")

@@ -25,6 +25,10 @@ Ahora, por cada area:
 - <AREA>/config/pipeline.json
 - <AREA>/proceso_pbix.log
 
+Regla operativa:
+- Cada oficina/area de datos debe tener su propio config/pipeline.json.
+- La relacion es 1 oficina (area) = 1 configuracion.
+
 Areas creadas en esta implementacion:
 - OFICINA_EVALUACION
 - PRESIDENCIA
@@ -36,6 +40,14 @@ Areas creadas en esta implementacion:
 - Trazabilidad de ejecucion con log por area
 
 ## Como se selecciona el area al ejecutar
+Forma recomendada (linea de comando):
+
+- python zCODE/07_definir_area.py OFICINA_EVALUACION
+- python zCODE/07_definir_area.py PRESIDENCIA
+
+El lanzador valida la carpeta del area y su config/pipeline.json, define PBIX_AREA para esa ejecucion y llama el proceso principal.
+
+Alternativas disponibles:
 El sistema usa esta prioridad:
 
 1. Valor manual en el script (si se define)
@@ -54,6 +66,7 @@ El proceso deja registro en:
 ## Gobierno de la solucion
 - La logica de procesamiento es unica y centralizada en zCODE.
 - Cada area solo define sus rutas y parametros en config/pipeline.json.
+- El script zCODE/07_definir_area.py estandariza la ejecucion por area.
 - No se duplican scripts por area.
 
 ## Proximo paso recomendado
@@ -63,3 +76,17 @@ Cuando cada area entregue sus PBIX:
 2. Ejecutar pipeline para esa area
 3. Validar Excel y log generado
 4. Repetir para las demas areas
+
+## Ejemplo final de ejecucion
+
+Comando:
+
+python zCODE/07_definir_area.py OFICINA_EVALUACION
+
+Salida esperada (resumen):
+
+- Ejecutando area: OFICINA_EVALUACION
+- Comando: <python> zCODE/06_procesar_pbixs.py
+- INICIO PROCESO MASIVO PBIX
+- Área activa: OFICINA_EVALUACION
+- PROCESO FINALIZADO

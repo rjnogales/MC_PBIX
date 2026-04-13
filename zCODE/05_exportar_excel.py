@@ -1,3 +1,5 @@
+"""Clasificacion de metadatos y exportacion a Excel por PBIX."""
+
 import pandas as pd
 
 # =========================
@@ -27,6 +29,7 @@ CLASIFICACION_TABLAS = {
 
 
 def clasificar_tabla_nombre(nombre):
+    """Clasifica una tabla por heuristica de nombre."""
     nombre = nombre.lower()
 
     if any(p in nombre for p in ["uso", "flota", "km", "kilometro", "puntualidad", "ie"]):
@@ -39,6 +42,7 @@ def clasificar_tabla_nombre(nombre):
 
 
 def clasificar_tablas(df_tablas):
+    """Agrega la columna tipo (HECHO, DIMENSION u OTRO) al dataframe de tablas."""
     def clasificar(tabla):
         if tabla in CLASIFICACION_TABLAS:
             return CLASIFICACION_TABLAS[tabla]
@@ -49,6 +53,7 @@ def clasificar_tablas(df_tablas):
 
 
 def clasificar_columnas(df_columnas, df_tablas):
+    """Propaga el tipo de tabla al dataframe de columnas."""
     df_columnas = df_columnas.merge(
         df_tablas[["tabla", "tipo"]],
         on="tabla",
@@ -59,6 +64,7 @@ def clasificar_columnas(df_columnas, df_tablas):
 
 
 def clasificar_relaciones(df_relaciones):
+    """Clasifica relaciones como negocio o tecnica."""
     def tipo_relacion(row):
         if "LocalDateTable" in row["tabla_destino"] or "LocalDateTable" in row["tabla_origen"]:
             return "tecnica"
@@ -69,6 +75,7 @@ def clasificar_relaciones(df_relaciones):
 
 
 def crear_glosario():
+    """Construye la hoja de glosario para el Excel de salida."""
     data = [
         ["HOJA", "DESCRIPCIÓN"],
         ["TABLAS", "Listado de tablas del modelo analítico."],
@@ -78,6 +85,9 @@ def crear_glosario():
         ["", ""],
         ["CAMPO", "DESCRIPCIÓN"],
         ["tipo", "HECHO, DIMENSION u OTRO"],
+        ["HECHO", "Tabla principal de métricas o eventos (ej. usos, flota, kilómetros, puntualidad)."],
+        ["DIMENSION", "Tabla de contexto para análisis (ej. fecha, ruta, tipología, concesionario, estación)."],
+        ["OTRO", "Tabla que no coincide con reglas de HECHO o DIMENSION."],
         ["tipo_relacion", "negocio o tecnica"],
         ["", ""],
         ["NOTA", "Documento generado automáticamente."]
@@ -87,6 +97,16 @@ def crear_glosario():
 
 
 def exportar_excel(tablas, columnas, medidas, relaciones, output_file):
+    """
+    Exporta tablas, columnas, medidas, relaciones y glosario a un solo archivo Excel.
+
+    Parametros:
+        tablas (pd.DataFrame): Dataframe de tablas.
+        columnas (pd.DataFrame): Dataframe de columnas.
+        medidas (pd.DataFrame): Dataframe de medidas.
+        relaciones (pd.DataFrame): Dataframe de relaciones.
+        output_file (Path | str): Ruta del archivo de salida.
+    """
 
     # Clasificación (se hace aquí porque es parte del modelo analítico)
     tablas = clasificar_tablas(tablas)

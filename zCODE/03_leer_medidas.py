@@ -1,19 +1,32 @@
+"""Extraccion de medidas DAX desde archivos .tmdl."""
+
 import os
 
 
 def limpiar_dax(dax):
+    """
+    Limpia texto DAX removiendo fragmentos de metadatos TMDL.
+
+    Parametros:
+        dax (str): Texto acumulado de la expresion.
+
+    Retorna:
+        str: Expresion DAX depurada.
+    """
 
     cortes = [
-        "changedProperty",
-        "annotation",
-        "column ",
-        "formatString",
-        "dataType"
+        "changedProperty",  # Inicio de bloque de propiedad modificada en TMDL
+        "annotation",       # Inicio de anotaciones o metadatos del objeto
+        "column ",          # Definicion de columna; no pertenece al DAX de medida
+        "formatString",     # Propiedad de formato de visualizacion de la medida
+        "dataType"          # Propiedad del tipo de dato de la medida
     ]
 
-    for corte in cortes:
-        if corte in dax:
-            dax = dax.split(corte)[0]
+    # Cortar por el primer marcador que aparezca en el texto para evitar
+    # recortes sucesivos dependientes del orden en la lista.
+    posiciones = [dax.find(corte) for corte in cortes if dax.find(corte) != -1]
+    if posiciones:
+        dax = dax[:min(posiciones)]
 
     # 🔧 limpiar "=" repetidos
     dax = dax.strip()
@@ -25,6 +38,15 @@ def limpiar_dax(dax):
 
 
 def leer_medidas(ruta_pbix):
+    """
+    Extrae medidas y su expresion DAX por tabla.
+
+    Parametros:
+        ruta_pbix (str): Ruta raiz del PBIX descompuesto.
+
+    Retorna:
+        list[dict]: Registros con tabla, medida y dax.
+    """
 
     ruta_tablas = os.path.join(ruta_pbix, "Model", "tables")
 
@@ -81,7 +103,7 @@ def leer_medidas(ruta_pbix):
     return resultado
 
 
-# 🔍 prueba
+# Prueba local rapida
 if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     ruta = os.path.join(base_dir, "LN_IndicadoresRutasMIO")

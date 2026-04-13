@@ -1,15 +1,18 @@
+"""Extraccion de tablas desde un PBIX descompuesto con pbi-tools."""
+"""https://pbi.tools/"""
+
 import os
 
 
 def leer_tablas(ruta_pbix):
     """
-    Lee las tablas desde un PBIX extraído con pbi-tools.
+    Lee las tablas del modelo semantico desde Model/tables.
 
-    Parámetro:
-        ruta_pbix (str): ruta raíz del proyecto extraído
+    Parametros:
+        ruta_pbix (str): Ruta raiz del PBIX descompuesto.
 
     Retorna:
-        list: lista de tablas encontradas
+        list[str]: Nombres de tablas no tecnicas encontradas.
     """
 
     ruta_tablas = os.path.join(ruta_pbix, "Model", "tables")
@@ -34,10 +37,10 @@ def leer_tablas(ruta_pbix):
     return tablas
 
 
-# 🔍 prueba rápida
+# Prueba local rapida
 if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    ruta = os.path.join(base_dir, "LN_IndicadoresRutasMIO")
+    ruta = os.path.join(base_dir, "OFICINA_EVALUACION", "PBIXs_descompuestos", "LN_IndicadoresRutasMIO")
     resultado = leer_tablas(ruta)
 
     print("\n📊 Tablas encontradas:")

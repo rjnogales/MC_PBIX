@@ -1,15 +1,17 @@
+"""Extraccion de relaciones desde Model/relationships.tmdl."""
+
 import os
 
 
 def leer_relaciones(ruta_pbix):
     """
-    Lee relaciones entre tablas desde relationships.tmdl
+    Lee relaciones entre tablas desde relationships.tmdl.
 
-    Parámetro:
-        ruta_pbix (str): ruta raíz del PBIX extraído
+    Parametros:
+        ruta_pbix (str): Ruta raiz del PBIX descompuesto.
 
     Retorna:
-        list[dict]: tabla_origen | columna_origen | tabla_destino | columna_destino
+        list[dict]: tabla_origen, columna_origen, tabla_destino y columna_destino.
     """
 
     ruta_rel = os.path.join(ruta_pbix, "Model", "relationships.tmdl")
@@ -68,10 +70,10 @@ def leer_relaciones(ruta_pbix):
     return relaciones
 
 
-# 🔍 prueba
+# Prueba local rapida
 if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    ruta = os.path.join(base_dir, "LN_IndicadoresRutasMIO")
+    ruta = os.path.join(base_dir, "OFICINA_EVALUACION", "PBIXs_descompuestos", "LN_IndicadoresRutasMIO")
 
     relaciones = leer_relaciones(ruta)
 

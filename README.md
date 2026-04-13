@@ -1,6 +1,7 @@
 # PBIX Analytics - Extraccion y Catalogo Tecnico
 
 ## Objetivo
+
 Este proyecto procesa archivos PBIX para extraer metadatos del modelo semantico y generar un Excel por cada PBIX con:
 
 - Tablas
@@ -26,7 +27,16 @@ Cada area tiene su propia estructura de datos/artefactos:
 - config/pipeline.json (configuracion del area)
 - proceso_pbix.log (log de ejecucion del area)
 
+Regla clave de configuracion:
+
+- Cada oficina/area de datos debe tener su propio config/pipeline.json.
+- No se usa un pipeline.json dentro de PBIXs, PBIXs_descompuestos o PBIXs_output.
+- La relacion es 1 oficina (area) = 1 archivo de configuracion.
+- La carpeta config es obligatoria dentro de cada area.
+- En pipeline.json, area_id debe ser el mismo nombre de la carpeta del area de datos (ejemplo: carpeta OFICINA_EVALUACION -> area_id: OFICINA_EVALUACION).
+
 ## Scripts y responsabilidad
+
 Los scripts en zCODE estan centralizados y reutilizables para todas las areas.
 
 - 01_leer_tablas.py: Lee tablas desde Model/tables y excluye tablas tecnicas.
@@ -35,38 +45,97 @@ Los scripts en zCODE estan centralizados y reutilizables para todas las areas.
 - 04_leer_relaciones.py: Lee relaciones desde Model/relationships.tmdl.
 - 05_exportar_excel.py: Clasifica tablas/relaciones y exporta el Excel final.
 - 06_procesar_pbixs.py: Orquesta la ejecucion completa por area.
+- 07_definir_area.py: Lanza la ejecucion por parametro de area en linea de comando.
 
-## Lo que acabamos de implementar
+## Contrato de entrada/salida por script
 
-1. Reorganizacion por area
-- Se movieron las carpetas globales a OFICINA_EVALUACION.
-- Se creo la estructura base para PRESIDENCIA.
+### 01_leer_tablas.py
 
-2. Configuracion por area
-- Se agrego OFICINA_EVALUACION/config/pipeline.json.
-- Se agrego PRESIDENCIA/config/pipeline.json.
-- El script 06 ahora carga rutas desde ese archivo (con defaults seguros).
+Entrada:
 
-3. Seleccion de area activa en el script 06
-- Se implemento un esquema de prioridad para elegir area:
-  1) AREA_ID_MANUAL
-  2) Variable de entorno PBIX_AREA
-  3) AREA_ID_DEFAULT
+- ruta_pbix (ruta a PBIX descompuesto con carpeta Model/tables).
 
-Bloque actual en zCODE/06_procesar_pbixs.py:
+Salida:
 
-AREA_ID_MANUAL = ""  # Ej: "PRESIDENCIA" para forzar el area.
-AREA_ID_DEFAULT = "OFICINA_EVALUACION"
-AREA_ID = (
-    AREA_ID_MANUAL.strip()
-    or os.getenv("PBIX_AREA", AREA_ID_DEFAULT).strip()
-    or AREA_ID_DEFAULT
-)
+- list[str] con nombres de tablas no tecnicas.
 
-4. Logs por area
-- El log ahora se escribe dentro de cada area segun pipeline.json.
+### 02_leer_columnas.py
+
+Entrada:
+
+- ruta_pbix (ruta a PBIX descompuesto con archivos .tmdl en Model/tables).
+
+Salida:
+
+- list[dict] con llaves: tabla, columna, tipo.
+
+### 03_leer_medidas.py
+
+Entrada:
+
+- ruta_pbix (ruta a PBIX descompuesto con medidas en archivos .tmdl).
+
+Salida:
+
+- list[dict] con llaves: tabla, medida, dax.
+
+### 04_leer_relaciones.py
+
+Entrada:
+
+- ruta_pbix (ruta a PBIX descompuesto con Model/relationships.tmdl).
+
+Salida:
+
+- list[dict] con llaves: tabla_origen, columna_origen, tabla_destino, columna_destino.
+
+### 05_exportar_excel.py
+
+Entrada:
+
+- tablas (DataFrame), columnas (DataFrame), medidas (DataFrame), relaciones (DataFrame), output_file (ruta).
+
+Salida:
+
+- archivo Excel por PBIX con hojas Tablas, Columnas, Medidas, Relaciones y Glosario.
+
+### 06_procesar_pbixs.py
+
+Entrada:
+
+- area activa definida por AREA_ID_MANUAL, variable PBIX_AREA o AREA_ID_DEFAULT.
+- configuracion de rutas desde `<AREA>`/config/pipeline.json.
+- archivos .pbix en `<AREA>`/PBIXs.
+
+Salida:
+
+- PBIX descompuestos en `<AREA>`/PBIXs_descompuestos.
+- Excel por PBIX en `<AREA>`/PBIXs_output.
+- log del proceso en `<AREA>`/proceso_pbix.log (o ruta definida en paths.log_file).
+
+### 07_definir_area.py
+
+Entrada:
+
+- AREA_ID por linea de comando (ejemplo: OFICINA_EVALUACION).
+
+Salida:
+
+- valida estructura del area y su config/pipeline.json.
+- ejecuta 06_procesar_pbixs.py con PBIX_AREA definido para esa corrida.
 
 ## Config por area (pipeline.json)
+
+Este archivo define como se procesa cada oficina/area. Sirve para:
+
+- indicar de donde leer los PBIX de entrada;
+- indicar donde guardar PBIX descompuestos y Excel de salida;
+- definir el archivo de log de esa area;
+- aplicar filtros de procesamiento (incluir/excluir patrones);
+- configurar el formato de exportacion.
+
+Si una oficina/area no tiene config/pipeline.json, no queda parametrizada correctamente para el flujo automatizado.
+
 Ejemplo de campos usados:
 
 - area_id
@@ -78,6 +147,11 @@ Ejemplo de campos usados:
 - procesamiento.excluir_patrones
 - exportacion.formato_salida
 
+Regla para area_id:
+
+- Debe coincidir con el nombre de la carpeta del area.
+- Ejemplo valido: carpeta PRESIDENCIA con area_id = PRESIDENCIA.
+
 ## Requisitos
 
 - Python con dependencias del proyecto
@@ -86,12 +160,24 @@ Ejemplo de campos usados:
 Compatibilidad validada en este workspace:
 
 - pbi-tools Desktop 1.2.0 no acepta -o en extract.
-- Comando compatible: pbi-tools extract <pbixPath>
+- Comando compatible: pbi-tools extract `<pbixPath>`
 - Si falla mover la salida por locks/rutas largas en Windows, el proceso usa fallback.
 
 ## Como ejecutar
 
-### Opcion A: Seleccion por variable de entorno (recomendada)
+### Opcion 0: Script lanzador por parametro de area (recomendada)
+
+Permite ejecutar indicando el area directamente en la linea de comando.
+
+Git Bash / PowerShell:
+
+python zCODE/07_definir_area.py OFICINA_EVALUACION
+python zCODE/07_definir_area.py PRESIDENCIA
+
+Este lanzador valida que exista la carpeta del area y su config/pipeline.json, define PBIX_AREA para esa ejecucion y luego llama automaticamente a zCODE/06_procesar_pbixs.py.
+
+### Opcion A: Seleccion por variable de entorno
+
 Git Bash:
 
 export PBIX_AREA=PRESIDENCIA
@@ -103,6 +189,7 @@ $env:PBIX_AREA = "PRESIDENCIA"
 python zCODE/06_procesar_pbixs.py
 
 ### Opcion B: Seleccion manual en codigo
+
 Editar zCODE/06_procesar_pbixs.py:
 
 - Asignar valor en AREA_ID_MANUAL
@@ -110,14 +197,28 @@ Editar zCODE/06_procesar_pbixs.py:
 
 ## Flujo resumido
 
-1. Buscar PBIX en <AREA>/PBIXs.
+1. Buscar PBIX en `<AREA>`/PBIXs.
 2. Descomponer con pbi-tools si hace falta (control por metadata).
 3. Leer tablas, columnas, medidas y relaciones.
-4. Generar Excel en <AREA>/PBIXs_output.
-5. Escribir log en <AREA>/proceso_pbix.log.
+4. Generar Excel en `<AREA>`/PBIXs_output.
+5. Escribir log en `<AREA>`/proceso_pbix.log.
 
 ## Siguientes pasos sugeridos
 
 - Agregar mas areas creando su carpeta y config/pipeline.json.
 - Opcional: usar procesamiento.incluir_patrones para correr subconjuntos.
 - Opcional: versionar plantillas de config para nuevas areas.
+
+## Ejemplo final de ejecucion
+
+Comando:
+
+python zCODE/07_definir_area.py OFICINA_EVALUACION
+
+Salida esperada (resumen):
+
+- Ejecutando area: OFICINA_EVALUACION
+- Comando: `<python>` zCODE/06_procesar_pbixs.py
+- INICIO PROCESO MASIVO PBIX
+- Área activa: OFICINA_EVALUACION
+- PROCESO FINALIZADO
