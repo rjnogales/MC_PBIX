@@ -1,0 +1,6 @@
+relationship r1
+    fromColumn: Usos.RUTA
+    toColumn: Rutas.RUTA
+relationship r2
+    fromColumn: Usos.fecha
+    toColumn: LocalDateTable_1.Date

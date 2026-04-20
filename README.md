@@ -163,6 +163,103 @@ Compatibilidad validada en este workspace:
 - Comando compatible: pbi-tools extract `<pbixPath>`
 - Si falla mover la salida por locks/rutas largas en Windows, el proceso usa fallback.
 
+## Pruebas automaticas
+
+Se incorporo una suite de pruebas unitarias con pytest para validar el nucleo del proceso de extraccion y catalogo.
+
+Cobertura objetivo definida:
+
+- 90% minimo para los modulos del MVP.
+
+Cobertura del MVP implementado:
+
+- 01_leer_tablas.py
+- 02_leer_columnas.py
+- 03_leer_medidas.py
+- 04_leer_relaciones.py
+- 05_exportar_excel.py
+
+Estructura de pruebas creada:
+
+- zCODE/tests/conftest.py
+- zCODE/tests/unit/test_01_leer_tablas.py
+- zCODE/tests/unit/test_02_leer_columnas.py
+- zCODE/tests/unit/test_03_leer_medidas.py
+- zCODE/tests/unit/test_04_leer_relaciones.py
+- zCODE/tests/unit/test_05_exportar_excel.py
+- zCODE/tests/unit/test_06_procesar_pbixs_unit.py
+- zCODE/tests/regression/reglas_negocio/test_funcional_reglas_negocio.py
+- zCODE/tests/regression/regresion_referencia/test_regresion_referencia.py
+- zCODE/pytest.ini
+- zCODE/.coveragerc
+- zCODE/requirements-test.txt
+
+### Ejecutar pruebas (Windows)
+
+Desde la raiz del proyecto:
+
+1. Instalar dependencias de pruebas:
+
+python -m pip install -r zCODE/requirements-test.txt
+
+2. Ejecutar pruebas unitarias con cobertura:
+
+python -m pytest -c zCODE/pytest.ini zCODE/tests/unit -q
+
+3. Generar vista HTML amigable de JUnit y actualizar enlaces en htmlcov/index.html:
+
+python zCODE/tests/reports/postprocess_reports.py
+
+4. Ejecutar pruebas funcionales (punto 2: reglas de negocio):
+
+python -m pytest -c zCODE/pytest.ini zCODE/tests/regression/reglas_negocio -q -m functional -o "addopts=-v --tb=short --strict-markers"
+
+5. Ejecutar pruebas de regresion contra referencia (punto 4):
+
+python -m pytest -c zCODE/pytest.ini zCODE/tests/regression/regresion_referencia -q -m regression -o "addopts=-v --tb=short --strict-markers"
+
+6. Generar evidencia XML/TXT de funcional:
+
+python -m pytest -c zCODE/pytest.ini zCODE/tests/regression/reglas_negocio -q -m functional -o "addopts=-v --tb=short --strict-markers" --junitxml=zCODE/tests/reports/junit-funcional.xml | tee zCODE/tests/reports/pytest-funcional-summary.txt
+
+7. Generar evidencia XML/TXT de regresion de referencia:
+
+python -m pytest -c zCODE/pytest.ini zCODE/tests/regression/regresion_referencia -q -m regression -o "addopts=-v --tb=short --strict-markers" --junitxml=zCODE/tests/reports/junit-regresion-referencia.xml | tee zCODE/tests/reports/pytest-regresion-referencia-summary.txt
+
+Atajo en una sola linea (ejecuta pruebas y luego postproceso):
+
+python -m pytest -c zCODE/pytest.ini zCODE/tests/unit -q --junitxml=zCODE/tests/reports/junit.xml && python zCODE/tests/reports/postprocess_reports.py
+
+Atajo recomendado de control completo (unitario + funcional + regresion + postproceso):
+
+python -m pytest -c zCODE/pytest.ini zCODE/tests/unit -q --junitxml=zCODE/tests/reports/junit.xml && python -m pytest -c zCODE/pytest.ini zCODE/tests/regression/reglas_negocio -q -m functional -o "addopts=-v --tb=short --strict-markers" --junitxml=zCODE/tests/reports/junit-funcional.xml && python -m pytest -c zCODE/pytest.ini zCODE/tests/regression/regresion_referencia -q -m regression -o "addopts=-v --tb=short --strict-markers" --junitxml=zCODE/tests/reports/junit-regresion-referencia.xml && python zCODE/tests/reports/postprocess_reports.py
+
+Notas:
+
+- La configuracion de cobertura del MVP excluye tests y scripts fuera de alcance del objetivo actual.
+- Las pruebas se ejecutan con datos sinteticos y no requieren PBIX reales.
+- El reporte JUnit amigable queda en zCODE/tests/reports/junit-report.html.
+
+Clasificacion oficial de fases:
+
+- Punto 2: pruebas funcionales (reglas de negocio).
+- Punto 4: pruebas de regresion contra dataset de referencia.
+
+Estructura de datos de referencia (punto 4):
+
+- zCODE/tests/fixtures/regresion_referencia/caso_base
+- zCODE/tests/fixtures/regresion_referencia/expected_snapshot.json
+
+Evidencias de pruebas (carpeta unica):
+
+- zCODE/tests/reports/pytest-summary.txt
+- zCODE/tests/reports/junit.xml
+- zCODE/tests/reports/pytest-funcional-summary.txt
+- zCODE/tests/reports/junit-funcional.xml
+- zCODE/tests/reports/pytest-regresion-referencia-summary.txt
+- zCODE/tests/reports/junit-regresion-referencia.xml
+- zCODE/tests/reports/junit-report.html
+
 ## Como ejecutar
 
 ### Opcion 0: Script lanzador por parametro de area (recomendada)

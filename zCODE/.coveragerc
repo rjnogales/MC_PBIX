@@ -1,0 +1,9 @@
+[run]
+omit =
+    tests/*
+    06_procesar_pbixs.py
+    07_definir_area.py
+
+[report]
+exclude_lines =
+    if __name__ == "__main__":

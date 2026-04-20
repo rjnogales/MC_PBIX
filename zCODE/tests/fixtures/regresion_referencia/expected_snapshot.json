@@ -1,0 +1,75 @@
+{
+  "tablas": [
+    "Rutas",
+    "Usos"
+  ],
+  "conteos": {
+    "tablas": 2,
+    "columnas": 5,
+    "medidas": 1,
+    "relaciones": 2
+  },
+  "columnas": [
+    {
+      "tabla": "Rutas",
+      "columna": "RUTA",
+      "tipo": "string"
+    },
+    {
+      "tabla": "Rutas",
+      "columna": "TIPO_SERVICIO",
+      "tipo": "string"
+    },
+    {
+      "tabla": "Usos",
+      "columna": "RUTA",
+      "tipo": "string"
+    },
+    {
+      "tabla": "Usos",
+      "columna": "USOSPAGOS",
+      "tipo": "int64"
+    },
+    {
+      "tabla": "Usos",
+      "columna": "fecha",
+      "tipo": "dateTime"
+    }
+  ],
+  "medidas": [
+    {
+      "tabla": "Usos",
+      "medida": "TotalUsos",
+      "dax": "SUM(Usos[USOSPAGOS] )"
+    }
+  ],
+  "relaciones": [
+    {
+      "tabla_origen": "Usos",
+      "columna_origen": "RUTA",
+      "tabla_destino": "Rutas",
+      "columna_destino": "RUTA"
+    },
+    {
+      "tabla_origen": "Usos",
+      "columna_origen": "fecha",
+      "tabla_destino": "LocalDateTable_1",
+      "columna_destino": "Date"
+    }
+  ],
+  "excel": {
+    "sheets": [
+      "Tablas",
+      "Columnas",
+      "Medidas",
+      "Relaciones",
+      "Glosario"
+    ],
+    "rows": {
+      "Tablas": 2,
+      "Columnas": 5,
+      "Medidas": 1,
+      "Relaciones": 2
+    }
+  }
+}

@@ -1,0 +1,6 @@
+pytest>=7.4
+pytest-cov>=4.1
+pytest-mock>=3.12
+pandas>=1.5
+openpyxl>=3.1
+xlsxwriter>=3.1

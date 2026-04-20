@@ -48,3 +48,15 @@ proceso_pbix.log
 */PBIXs_descompuestos/
 */PBIXs_output/
 */proceso_pbix.log
+zDCMTOS/
+
+# =========================
+# Test and coverage artifacts
+# =========================
+.coverage
+.coverage.*
+zCODE/.coverage
+zCODE/htmlcov/
+
+zCODE/tests/reports/*
+!zCODE/tests/reports/postprocess_reports.py

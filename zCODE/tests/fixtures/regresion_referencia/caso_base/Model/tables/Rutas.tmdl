@@ -1,0 +1,5 @@
+table Rutas
+column RUTA
+    dataType: string
+column TIPO_SERVICIO
+    dataType: string

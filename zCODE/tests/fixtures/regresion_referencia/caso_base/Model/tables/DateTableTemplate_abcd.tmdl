@@ -1,0 +1,3 @@
+table DateTableTemplate_abcd
+column Date
+    dataType: dateTime

@@ -1,0 +1,10 @@
+table Usos
+column fecha
+    dataType: dateTime
+column RUTA
+    dataType: string
+column USOSPAGOS
+    dataType: int64
+measure TotalUsos
+    expression: = SUM(Usos[USOSPAGOS]
+    )

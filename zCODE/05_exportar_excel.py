@@ -57,9 +57,12 @@ def clasificar_columnas(df_columnas, df_tablas):
     df_columnas = df_columnas.merge(
         df_tablas[["tabla", "tipo"]],
         on="tabla",
-        how="left"
+        how="left",
+        suffixes=("", "_tabla")
     )
-    df_columnas = df_columnas.rename(columns={"tipo": "tipo_tabla"})
+    if "tipo_tabla" not in df_columnas.columns and "tipo" in df_columnas.columns:
+        # Solo ocurre cuando el dataframe de columnas no trae su propio campo "tipo".
+        df_columnas = df_columnas.rename(columns={"tipo": "tipo_tabla"})
     return df_columnas
 
 

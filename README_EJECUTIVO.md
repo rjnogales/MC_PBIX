@@ -39,6 +39,60 @@ Areas creadas en esta implementacion:
 - Escalabilidad simple para nuevas areas
 - Trazabilidad de ejecucion con log por area
 
+## Control de calidad incorporado
+
+Se implemento una capa de pruebas automaticas para fortalecer la confiabilidad del proceso tecnico.
+
+- Suite unitaria en zCODE/tests/unit
+- Cobertura objetivo del MVP: 90%
+- Validacion de extraccion de tablas, columnas, medidas y relaciones
+- Validacion de exportacion de catalogo tecnico a Excel
+
+Clasificacion oficial de control:
+
+- Punto 2: pruebas funcionales (reglas de negocio).
+- Punto 4: pruebas de regresion contra dataset de referencia.
+
+Estado de implementacion actual:
+
+- Punto 2 implementado en zCODE/tests/regression/reglas_negocio.
+- Punto 4 implementado en zCODE/tests/regression/regresion_referencia.
+
+Impacto de negocio:
+
+- Reduce el riesgo de regresiones por cambios en parser o reglas.
+- Mejora la estabilidad operativa antes de procesamientos masivos.
+
+## Indicadores verificables (corte 2026-04-20)
+
+| Indicador | Resultado | Criterio | Estado |
+|---|---:|---:|---|
+| Pruebas ejecutadas | 26 | N/A | Cumple |
+| Pruebas aprobadas | 26 | 100% de las ejecutadas | Cumple |
+| Pruebas fallidas | 0 | 0 | Cumple |
+| Cobertura objetivo MVP | 90% | >= 90% | Cumple |
+| Cobertura alcanzada | 98.12% | >= 90% | Cumple |
+| Cobertura 01_leer_tablas.py | 100% | >= 90% | Cumple |
+| Cobertura 02_leer_columnas.py | 96% | >= 90% | Cumple |
+| Cobertura 03_leer_medidas.py | 98% | >= 90% | Cumple |
+| Cobertura 04_leer_relaciones.py | 100% | >= 90% | Cumple |
+| Cobertura 05_exportar_excel.py | 98% | >= 90% | Cumple |
+
+Fuentes de evidencia:
+
+- Resumen de ejecucion: zCODE/tests/reports/pytest-summary.txt
+- Reporte XML (formato JUnit): zCODE/tests/reports/junit.xml
+- Reporte HTML de cobertura: zCODE/htmlcov/index.html
+
+Comando de reproduccion (local Windows):
+
+- python -m pytest -c zCODE/pytest.ini zCODE/tests/unit -q
+
+Alcance de cobertura del MVP:
+
+- Incluye: 01_leer_tablas.py, 02_leer_columnas.py, 03_leer_medidas.py, 04_leer_relaciones.py, 05_exportar_excel.py
+- Excluye por definicion de fase: 06_procesar_pbixs.py, 07_definir_area.py
+
 ## Como se selecciona el area al ejecutar
 Forma recomendada (linea de comando):
 
