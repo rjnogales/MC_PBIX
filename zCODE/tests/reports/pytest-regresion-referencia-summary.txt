@@ -1,0 +1,12 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.3, pytest-9.0.3, pluggy-1.6.0
+rootdir: C:\Users\HP\Dropbox\E_RN\MC\PBIX_analitycs\zCODE
+configfile: pytest.ini
+plugins: cov-7.1.0, mock-3.15.1
+collected 2 items
+
+zCODE\tests\regression\regresion_referencia\test_regresion_referencia.py . [ 50%]
+.                                                                        [100%]
+
+- generated xml file: C:\Users\HP\Dropbox\E_RN\MC\PBIX_analitycs\zCODE\tests\reports\junit-regresion-referencia.xml -
+============================== 2 passed in 1.22s ==============================

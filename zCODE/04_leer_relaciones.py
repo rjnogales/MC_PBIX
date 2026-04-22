@@ -4,18 +4,21 @@ import os
 
 
 def leer_relaciones(ruta_pbix):
-    """
-    Lee relaciones entre tablas desde relationships.tmdl.
+    """Read table relationships from Model/relationships.tmdl.
 
-    Parametros:
-        ruta_pbix (str): Ruta raiz del PBIX descompuesto.
+    Args:
+        ruta_pbix: Root path of the decomposed PBIX structure.
 
-    Retorna:
-        list[dict]: tabla_origen, columna_origen, tabla_destino y columna_destino.
+    Returns:
+        list[dict]: Records with source and target table/column pairs.
+
+    Raises:
+        FileNotFoundError: If Model/relationships.tmdl does not exist.
     """
 
     ruta_rel = os.path.join(ruta_pbix, "Model", "relationships.tmdl")
 
+    # Todas las relaciones del modelo se centralizan en este archivo.
     if not os.path.exists(ruta_rel):
         raise FileNotFoundError(f"No existe: {ruta_rel}")
 
@@ -25,21 +28,40 @@ def leer_relaciones(ruta_pbix):
     relaciones = []
 
     def limpiar_comillas(texto):
+        """Remove wrapping single quotes from a TMDL identifier.
+
+        Args:
+            texto: Raw identifier text.
+
+        Returns:
+            str: Identifier without wrapping single quotes.
+        """
+        # TMDL puede envolver nombres con espacios entre comillas simples.
         texto = texto.strip()
         if texto.startswith("'") and texto.endswith("'") and len(texto) >= 2:
             return texto[1:-1]
         return texto
 
     def separar_referencia(ref):
+        """Split a TMDL reference into table and column components.
+
+        Args:
+            ref: Raw reference in bracket or dot notation.
+
+        Returns:
+            tuple[str, str]: Parsed table and column names.
+        """
         ref = ref.strip()
 
         if "[" in ref and ref.endswith("]"):
+            # Soporta referencias tipo 'Tabla Nombre'[Columna].
             tabla, columna = ref.split("[", 1)
             columna = columna[:-1]
             tabla = tabla.rstrip(".").strip()
         else:
             if "." not in ref:
                 return ref, ""
+            # Soporta referencias tipo Tabla.Columna.
             tabla, columna = ref.rsplit(".", 1)
 
         return limpiar_comillas(tabla), limpiar_comillas(columna)

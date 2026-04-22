@@ -1,0 +1,7 @@
+# Created by coverage.py
+*
+!.gitignore
+!*.html
+!*.css
+!*.js
+!*.json

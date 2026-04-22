@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JUnit Report - Unit Suite</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --ok: #1f7a3f;
+      --ok-bg: #e8f7ee;
+      --fail: #b42318;
+      --fail-bg: #fdecea;
+      --err: #8e2a12;
+      --err-bg: #fde8e5;
+      --skip: #8a6d1d;
+      --skip-bg: #fff8e1;
+    }
+    body {
+      margin: 0;
+      font-family: Segoe UI, Tahoma, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(120px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .kpi {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      background: #fff;
+    }
+    .kpi .v {
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .kpi .l {
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .suite-summary {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #f9fafb;
+      font-size: 13px;
+    }
+    .links a {
+      margin-right: 12px;
+      color: #0f4c81;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 13px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      padding: 8px;
+      word-wrap: break-word;
+    }
+    th {
+      background: #fafafa;
+      font-weight: 700;
+    }
+    .num {
+      text-align: right;
+      white-space: nowrap;
+    }
+    .badge {
+      display: inline-block;
+      border-radius: 12px;
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .ok { color: var(--ok); background: var(--ok-bg); }
+    .fail { color: var(--fail); background: var(--fail-bg); }
+    .err { color: var(--err); background: var(--err-bg); }
+    .skip { color: var(--skip); background: var(--skip-bg); }
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>JUnit Report - Unit Suite</h1>
+      <div class="meta">Generated at 2026-04-22T14:17:52</div>
+      <div class="kpis">
+        <div class="kpi"><div class="v">26</div><div class="l">Tests</div></div>
+        <div class="kpi"><div class="v">26</div><div class="l">Passed</div></div>
+        <div class="kpi"><div class="v">0</div><div class="l">Failures</div></div>
+        <div class="kpi"><div class="v">0</div><div class="l">Errors</div></div>
+        <div class="kpi"><div class="v">0</div><div class="l">Skipped</div></div>
+        <div class="kpi"><div class="v">1.679</div><div class="l">Time (s)</div></div>
+      </div>
+      <div class="suite-summary">Pass rate: <strong>100.00%</strong></div>
+      <div class="links" style="margin-top: 14px;">
+        <a href="junit.xml">Open junit.xml</a>
+        <a href="pytest-summary.txt">Open pytest-summary.txt</a>
+        <a href="reports-index.html">Open reports-index.html</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 28%;">Class</th>
+            <th style="width: 24%;">Test</th>
+            <th style="width: 8%;">Time</th>
+            <th style="width: 10%;">Status</th>
+            <th style="width: 30%;">Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>tests.unit.test_01_leer_tablas</td><td>test_leer_tablas_excluye_tecnicas</td><td class='num'>0.011</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_01_leer_tablas</td><td>test_leer_tablas_lanza_si_no_existe_directorio</td><td class='num'>0.002</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_01_leer_tablas</td><td>test_leer_tablas_vacio</td><td class='num'>0.003</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_02_leer_columnas</td><td>test_leer_columnas_extrae_tabla_columna_tipo</td><td class='num'>0.005</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_02_leer_columnas</td><td>test_leer_columnas_excluye_tecnicas</td><td class='num'>0.005</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_02_leer_columnas</td><td>test_leer_columnas_ignora_si_no_hay_data_type</td><td class='num'>0.005</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_02_leer_columnas</td><td>test_leer_columnas_lanza_si_no_existe_directorio</td><td class='num'>0.002</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_03_leer_medidas</td><td>test_limpiar_dax_remueve_prefijos_y_metadatos</td><td class='num'>0.002</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_03_leer_medidas</td><td>test_leer_medidas_extrae_medida_dax</td><td class='num'>0.006</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_03_leer_medidas</td><td>test_leer_medidas_devuelve_vacio_sin_cierre_parentesis</td><td class='num'>0.005</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_03_leer_medidas</td><td>test_leer_medidas_lanza_si_no_existe_directorio</td><td class='num'>0.002</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_04_leer_relaciones</td><td>test_leer_relaciones_parsea_referencias_con_comillas_y_brackets</td><td class='num'>0.008</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_04_leer_relaciones</td><td>test_leer_relaciones_sin_punto_devuelve_columna_vacia</td><td class='num'>0.006</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_04_leer_relaciones</td><td>test_leer_relaciones_lanza_si_no_existe_archivo</td><td class='num'>0.002</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_05_exportar_excel</td><td>test_clasificar_tabla_nombre</td><td class='num'>0.002</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_05_exportar_excel</td><td>test_clasificar_tablas_y_columnas</td><td class='num'>0.009</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_05_exportar_excel</td><td>test_clasificar_relaciones_y_glosario</td><td class='num'>0.002</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_05_exportar_excel</td><td>test_exportar_excel_genera_archivo_y_hojas</td><td class='num'>0.518</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_06_procesar_pbixs_unit</td><td>test_cargar_config_area_defaults</td><td class='num'>0.004</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_06_procesar_pbixs_unit</td><td>test_cargar_config_area_override</td><td class='num'>0.003</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_06_procesar_pbixs_unit</td><td>test_resolver_ruta_area_relativa_y_absoluta</td><td class='num'>0.002</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_06_procesar_pbixs_unit</td><td>test_metadata_corresponde_pbix</td><td class='num'>0.000</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_06_procesar_pbixs_unit</td><td>test_leer_y_guardar_metadata_extraccion</td><td class='num'>0.011</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_06_procesar_pbixs_unit</td><td>test_descomponer_pbix_reutiliza_metadata</td><td class='num'>0.013</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_06_procesar_pbixs_unit</td><td>test_procesar_pbix_ok</td><td class='num'>0.005</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.unit.test_06_procesar_pbixs_unit</td><td>test_procesar_pbix_falla_si_no_hay_model</td><td class='num'>0.003</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

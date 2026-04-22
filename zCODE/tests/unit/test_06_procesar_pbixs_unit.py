@@ -4,6 +4,13 @@ import pandas as pd
 
 
 def test_cargar_config_area_defaults(m06, tmp_path: Path):
+    """Verify that default configuration is used when JSON is missing.
+
+    Args:
+        m06: Loaded module under test for PBIX orchestration.
+        tmp_path: Temporary directory provided by pytest.
+    """
+    # Sin archivo JSON, la configuracion debe completarse con defaults del modulo.
     conf = m06.cargar_config_area(tmp_path / "no_existe.json")
 
     assert conf["area_id"]
@@ -11,6 +18,13 @@ def test_cargar_config_area_defaults(m06, tmp_path: Path):
 
 
 def test_cargar_config_area_override(m06, tmp_path: Path):
+    """Verify that pipeline.json overrides only the values it defines.
+
+    Args:
+        m06: Loaded module under test for PBIX orchestration.
+        tmp_path: Temporary directory provided by pytest.
+    """
+    # El archivo solo sobreescribe las claves presentes y deja el resto intacto.
     config = tmp_path / "pipeline.json"
     config.write_text(
         '{"area_id": "AREA_TEST", "paths": {"output": "salida_custom"}}',
@@ -24,6 +38,13 @@ def test_cargar_config_area_override(m06, tmp_path: Path):
 
 
 def test_resolver_ruta_area_relativa_y_absoluta(m06, tmp_path: Path):
+    """Verify resolution of both relative and absolute area paths.
+
+    Args:
+        m06: Loaded module under test for PBIX orchestration.
+        tmp_path: Temporary directory provided by pytest.
+    """
+    # Las rutas relativas se anclan al area; las absolutas se respetan tal cual.
     rel = m06.resolver_ruta_area(tmp_path, "PBIXs")
     abs_path = m06.resolver_ruta_area(tmp_path, str(tmp_path / "ABS"))
 
@@ -32,6 +53,12 @@ def test_resolver_ruta_area_relativa_y_absoluta(m06, tmp_path: Path):
 
 
 def test_metadata_corresponde_pbix(m06):
+    """Verify that identical metadata matches the PBIX signature.
+
+    Args:
+        m06: Loaded module under test for PBIX orchestration.
+    """
+    # La comparacion debe aceptar una metadata identica a la firma del archivo.
     firma = {
         "pbix_name": "x.pbix",
         "pbix_path": "C:/tmp/x.pbix",
@@ -44,6 +71,14 @@ def test_metadata_corresponde_pbix(m06):
 
 
 def test_leer_y_guardar_metadata_extraccion(m06, tmp_path: Path, monkeypatch):
+    """Verify that extraction metadata can be written and read back.
+
+    Args:
+        m06: Loaded module under test for PBIX orchestration.
+        tmp_path: Temporary directory provided by pytest.
+        monkeypatch: Pytest helper for temporary attribute replacement.
+    """
+    # Se desactiva el log para aislar el comportamiento de persistencia.
     destino = tmp_path / "descomp"
     destino.mkdir(parents=True)
 
@@ -58,12 +93,21 @@ def test_leer_y_guardar_metadata_extraccion(m06, tmp_path: Path, monkeypatch):
     m06.guardar_metadata_extraccion(destino, firma)
     data = m06.leer_metadata_extraccion(destino)
 
+    # La metadata debe conservar la firma y anadir la marca temporal de extraccion.
     assert data is not None
     assert data["pbix_name"] == "a.pbix"
     assert "extracted_at" in data
 
 
 def test_descomponer_pbix_reutiliza_metadata(m06, tmp_path: Path, monkeypatch):
+    """Verify that a current decomposition is reused without re-extraction.
+
+    Args:
+        m06: Loaded module under test for PBIX orchestration.
+        tmp_path: Temporary directory provided by pytest.
+        monkeypatch: Pytest helper for temporary attribute replacement.
+    """
+    # Se simula una descomposicion ya existente y consistente con el PBIX actual.
     pbix = tmp_path / "reporte.pbix"
     pbix.write_bytes(b"x")
 
@@ -83,6 +127,14 @@ def test_descomponer_pbix_reutiliza_metadata(m06, tmp_path: Path, monkeypatch):
 
 
 def test_procesar_pbix_ok(m06, tmp_path: Path, monkeypatch):
+    """Verify the successful orchestration flow through final export.
+
+    Args:
+        m06: Loaded module under test for PBIX orchestration.
+        tmp_path: Temporary directory provided by pytest.
+        monkeypatch: Pytest helper for temporary attribute replacement.
+    """
+    # Se reemplazan dependencias externas para probar solo la orquestacion.
     pbix = tmp_path / "ok.pbix"
     pbix.write_bytes(b"ok")
 
@@ -96,6 +148,15 @@ def test_procesar_pbix_ok(m06, tmp_path: Path, monkeypatch):
     calls = {"export": False}
 
     def fake_exportar(tablas, columnas, medidas, relaciones, output_file):
+        """Simulate export and validate that normalized structures are received.
+
+        Args:
+            tablas: DataFrame with table metadata.
+            columnas: DataFrame with column metadata.
+            medidas: DataFrame with measure metadata.
+            relaciones: DataFrame with relationship metadata.
+            output_file: Expected output workbook path.
+        """
         calls["export"] = True
         assert isinstance(tablas, pd.DataFrame)
         assert output_file.name == "ok.xlsx"
@@ -114,6 +175,14 @@ def test_procesar_pbix_ok(m06, tmp_path: Path, monkeypatch):
 
 
 def test_procesar_pbix_falla_si_no_hay_model(m06, tmp_path: Path, monkeypatch):
+    """Verify that processing aborts when Model/tables is missing.
+
+    Args:
+        m06: Loaded module under test for PBIX orchestration.
+        tmp_path: Temporary directory provided by pytest.
+        monkeypatch: Pytest helper for temporary attribute replacement.
+    """
+    # Si la descomposicion no contiene Model/tables, el proceso debe abortar limpio.
     pbix = tmp_path / "bad.pbix"
     pbix.write_bytes(b"bad")
 

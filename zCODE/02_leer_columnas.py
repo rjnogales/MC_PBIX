@@ -5,17 +5,20 @@ import re
 
 
 def leer_columnas(ruta_pbix):
-    """
-    Extrae columnas por tabla desde Model/tables.
+    """Extract table columns and data types from Model/tables.
 
-    Parametros:
-        ruta_pbix (str): Ruta raiz del PBIX descompuesto.
+    Args:
+        ruta_pbix: Root path of the decomposed PBIX structure.
 
-    Retorna:
-        list[dict]: Registros con tabla, columna y tipo.
+    Returns:
+        list[dict]: Records with table, column, and data type.
+
+    Raises:
+        FileNotFoundError: If Model/tables does not exist.
     """
     ruta_tablas = os.path.join(ruta_pbix, "Model", "tables")
 
+    # Sin Model/tables no hay archivos fuente para extraer metadatos.
     if not os.path.exists(ruta_tablas):
         raise FileNotFoundError(f"No existe la ruta: {ruta_tablas}")
 
@@ -37,6 +40,7 @@ def leer_columnas(ruta_pbix):
         with open(ruta_archivo, "r", encoding="utf-8", errors="ignore") as f:
             lineas = f.readlines()
 
+        # Se captura la ultima columna vista hasta encontrar su dataType.
         col_actual = None
 
         for linea in lineas:

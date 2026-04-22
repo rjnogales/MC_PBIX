@@ -1,0 +1,30 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.3, pytest-9.0.3, pluggy-1.6.0
+rootdir: C:\Users\HP\Dropbox\E_RN\MC\PBIX_analitycs\zCODE
+configfile: pytest.ini
+plugins: cov-7.1.0, mock-3.15.1
+collected 26 items
+
+tests\unit\test_01_leer_tablas.py ...                                    [ 11%]
+tests\unit\test_02_leer_columnas.py ....                                 [ 26%]
+tests\unit\test_03_leer_medidas.py ....                                  [ 42%]
+tests\unit\test_04_leer_relaciones.py ...                                [ 53%]
+tests\unit\test_05_exportar_excel.py ....                                [ 69%]
+tests\unit\test_06_procesar_pbixs_unit.py ........                       [100%]
+
+- generated xml file: C:\Users\HP\Dropbox\E_RN\MC\PBIX_analitycs\zCODE\tests\reports\junit.xml -
+=============================== tests coverage ================================
+_______________ coverage: platform win32, python 3.14.3-final-0 _______________
+
+Name                    Stmts   Miss  Cover   Missing
+-----------------------------------------------------
+01_leer_tablas.py          16      0   100%
+02_leer_columnas.py        26      1    96%   27
+03_leer_medidas.py         41      1    98%   61
+04_leer_relaciones.py      35      0   100%
+05_exportar_excel.py       42      1    98%   65
+-----------------------------------------------------
+TOTAL                     160      3    98%
+Coverage HTML written to dir htmlcov
+Required test coverage of 90% reached. Total coverage: 98.12%
+============================= 26 passed in 1.68s ==============================

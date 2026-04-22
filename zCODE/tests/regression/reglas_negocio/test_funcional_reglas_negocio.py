@@ -9,7 +9,13 @@ pytestmark = pytest.mark.functional
 
 
 def test_relaciones_negocio_apuntan_a_tablas_existentes(m01, m04, pbix_root: Path):
-    """Regla: relaciones de negocio deben referenciar tablas del modelo."""
+    """Verify that non-technical relationships point to existing tables.
+
+    Args:
+        m01: Loaded module under test for table reading.
+        m04: Loaded module under test for relationship reading.
+        pbix_root: Temporary PBIX root with decomposed metadata.
+    """
     tables_dir = pbix_root / "Model" / "tables"
     (tables_dir / "Usos.tmdl").write_text("table Usos", encoding="utf-8")
     (tables_dir / "Rutas.tmdl").write_text("table Rutas", encoding="utf-8")
@@ -35,7 +41,12 @@ relationship r2
 
 
 def test_medidas_tienen_dax_no_vacio(m03, pbix_root: Path):
-    """Regla: toda medida detectada debe contener DAX util y limpio."""
+    """Verify that each detected measure keeps a non-empty, clean DAX.
+
+    Args:
+        m03: Loaded module under test for measure reading.
+        pbix_root: Temporary PBIX root with Model/tables.
+    """
     tmdl = """table Usos
 measure UsosProm
     expression: = SUM(Usos[USOSPAGOS])
@@ -51,7 +62,13 @@ measure UsosProm
 
 
 def test_tabla_hecho_tiene_columna_numerica(m02, m05, pbix_root: Path):
-    """Regla: toda tabla clasificada HECHO debe tener al menos un campo numerico."""
+    """Verify that each HECHO table has at least one numeric column.
+
+    Args:
+        m02: Loaded module under test for column reading.
+        m05: Loaded module under test for classification/export.
+        pbix_root: Temporary PBIX root with Model/tables.
+    """
     (pbix_root / "Model" / "tables" / "Usos.tmdl").write_text(
         """table Usos
 column RUTA
@@ -81,7 +98,12 @@ column RUTA
 
 
 def test_export_excel_mantiene_consistencia_de_tablas(m05, tmp_path: Path):
-    """Regla: columnas y relaciones exportadas deben pertenecer a tablas registradas."""
+    """Verify that exported Excel does not reference tables outside the catalog.
+
+    Args:
+        m05: Loaded module under test for classification/export.
+        tmp_path: Temporary directory provided by pytest.
+    """
     tablas = pd.DataFrame({"tabla": ["Usos", "Rutas"]})
     columnas = pd.DataFrame(
         [

@@ -29,12 +29,21 @@ CLASIFICACION_TABLAS = {
 
 
 def clasificar_tabla_nombre(nombre):
-    """Clasifica una tabla por heuristica de nombre."""
+    """Classify a table by name heuristics.
+
+    Args:
+        nombre: Table name to classify.
+
+    Returns:
+        str: Table type label such as HECHO, DIMENSION, or OTRO.
+    """
     nombre = nombre.lower()
 
+    # Estas palabras clave apuntan a tablas transaccionales o de metricas.
     if any(p in nombre for p in ["uso", "flota", "km", "kilometro", "puntualidad", "ie"]):
         return "HECHO"
 
+    # Estas palabras clave suelen describir dimensiones de analisis.
     if any(p in nombre for p in ["ruta", "calendario", "fecha", "tipologia", "concesionario", "estacion"]):
         return "DIMENSION"
 
@@ -42,8 +51,24 @@ def clasificar_tabla_nombre(nombre):
 
 
 def clasificar_tablas(df_tablas):
-    """Agrega la columna tipo (HECHO, DIMENSION u OTRO) al dataframe de tablas."""
+    """Add the analytical type column to the tables DataFrame.
+
+    Args:
+        df_tablas: DataFrame with at least the tabla column.
+
+    Returns:
+        pd.DataFrame: Same DataFrame enriched with the tipo column.
+    """
     def clasificar(tabla):
+        """Resolve the classification for a single table name.
+
+        Args:
+            tabla: Table name to classify.
+
+        Returns:
+            str: Analytical table type.
+        """
+        # Primero se respeta el catalogo manual; si no existe, aplica heuristica.
         if tabla in CLASIFICACION_TABLAS:
             return CLASIFICACION_TABLAS[tabla]
         return clasificar_tabla_nombre(tabla)
@@ -53,7 +78,15 @@ def clasificar_tablas(df_tablas):
 
 
 def clasificar_columnas(df_columnas, df_tablas):
-    """Propaga el tipo de tabla al dataframe de columnas."""
+    """Propagate table classification into the columns DataFrame.
+
+    Args:
+        df_columnas: DataFrame with column metadata.
+        df_tablas: DataFrame with classified tables.
+
+    Returns:
+        pd.DataFrame: Columns DataFrame enriched with table type information.
+    """
     df_columnas = df_columnas.merge(
         df_tablas[["tabla", "tipo"]],
         on="tabla",
@@ -67,8 +100,24 @@ def clasificar_columnas(df_columnas, df_tablas):
 
 
 def clasificar_relaciones(df_relaciones):
-    """Clasifica relaciones como negocio o tecnica."""
+    """Classify relationships as business or technical.
+
+    Args:
+        df_relaciones: DataFrame with relationship metadata.
+
+    Returns:
+        pd.DataFrame: Relationships DataFrame enriched with tipo_relacion.
+    """
     def tipo_relacion(row):
+        """Resolve the relationship type for one row.
+
+        Args:
+            row: Relationship row from the DataFrame.
+
+        Returns:
+            str: Relationship type label.
+        """
+        # Las relaciones con tablas tecnicas de calendario no se consideran de negocio.
         if "LocalDateTable" in row["tabla_destino"] or "LocalDateTable" in row["tabla_origen"]:
             return "tecnica"
         return "negocio"
@@ -78,7 +127,11 @@ def clasificar_relaciones(df_relaciones):
 
 
 def crear_glosario():
-    """Construye la hoja de glosario para el Excel de salida."""
+    """Build the glossary sheet used in the output workbook.
+
+    Returns:
+        pd.DataFrame: Glossary content for the Excel output.
+    """
     data = [
         ["HOJA", "DESCRIPCIÓN"],
         ["TABLAS", "Listado de tablas del modelo analítico."],
@@ -100,23 +153,23 @@ def crear_glosario():
 
 
 def exportar_excel(tablas, columnas, medidas, relaciones, output_file):
-    """
-    Exporta tablas, columnas, medidas, relaciones y glosario a un solo archivo Excel.
+    """Export tables, columns, measures, relationships, and glossary to Excel.
 
-    Parametros:
-        tablas (pd.DataFrame): Dataframe de tablas.
-        columnas (pd.DataFrame): Dataframe de columnas.
-        medidas (pd.DataFrame): Dataframe de medidas.
-        relaciones (pd.DataFrame): Dataframe de relaciones.
-        output_file (Path | str): Ruta del archivo de salida.
+    Args:
+        tablas: DataFrame with table metadata.
+        columnas: DataFrame with column metadata.
+        medidas: DataFrame with measure metadata.
+        relaciones: DataFrame with relationship metadata.
+        output_file: Output workbook path.
     """
 
-    # Clasificación (se hace aquí porque es parte del modelo analítico)
+    # La exportacion deja el archivo ya enriquecido con clasificacion analitica.
     tablas = clasificar_tablas(tablas)
     columnas = clasificar_columnas(columnas, tablas)
     relaciones = clasificar_relaciones(relaciones)
 
     with pd.ExcelWriter(output_file, engine='xlsxwriter') as writer:
+        # Cada hoja corresponde a una vista util para catalogo y auditoria.
 
         tablas.to_excel(writer, sheet_name='Tablas', index=False)
         columnas.to_excel(writer, sheet_name='Columnas', index=False)

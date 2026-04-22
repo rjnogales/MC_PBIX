@@ -56,7 +56,12 @@ zDCMTOS/
 .coverage
 .coverage.*
 zCODE/.coverage
-zCODE/htmlcov/
+zCODE/htmlcov/*
+!zCODE/htmlcov/*.html
+!zCODE/htmlcov/*.css
+!zCODE/htmlcov/*.js
+!zCODE/htmlcov/*.json
 
-zCODE/tests/reports/*
-!zCODE/tests/reports/postprocess_reports.py
+zCODE/tests/reports/*.tmp
+zCODE/tests/reports/*.bak
+zCODE/tests/reports/*.swp

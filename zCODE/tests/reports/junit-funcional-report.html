@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JUnit Report - Functional Suite</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --ok: #1f7a3f;
+      --ok-bg: #e8f7ee;
+      --fail: #b42318;
+      --fail-bg: #fdecea;
+      --err: #8e2a12;
+      --err-bg: #fde8e5;
+      --skip: #8a6d1d;
+      --skip-bg: #fff8e1;
+    }
+    body {
+      margin: 0;
+      font-family: Segoe UI, Tahoma, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(120px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .kpi {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      background: #fff;
+    }
+    .kpi .v {
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .kpi .l {
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .suite-summary {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #f9fafb;
+      font-size: 13px;
+    }
+    .links a {
+      margin-right: 12px;
+      color: #0f4c81;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 13px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      padding: 8px;
+      word-wrap: break-word;
+    }
+    th {
+      background: #fafafa;
+      font-weight: 700;
+    }
+    .num {
+      text-align: right;
+      white-space: nowrap;
+    }
+    .badge {
+      display: inline-block;
+      border-radius: 12px;
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .ok { color: var(--ok); background: var(--ok-bg); }
+    .fail { color: var(--fail); background: var(--fail-bg); }
+    .err { color: var(--err); background: var(--err-bg); }
+    .skip { color: var(--skip); background: var(--skip-bg); }
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>JUnit Report - Functional Suite</h1>
+      <div class="meta">Generated at 2026-04-22T14:17:52</div>
+      <div class="kpis">
+        <div class="kpi"><div class="v">4</div><div class="l">Tests</div></div>
+        <div class="kpi"><div class="v">4</div><div class="l">Passed</div></div>
+        <div class="kpi"><div class="v">0</div><div class="l">Failures</div></div>
+        <div class="kpi"><div class="v">0</div><div class="l">Errors</div></div>
+        <div class="kpi"><div class="v">0</div><div class="l">Skipped</div></div>
+        <div class="kpi"><div class="v">1.187</div><div class="l">Time (s)</div></div>
+      </div>
+      <div class="suite-summary">Pass rate: <strong>100.00%</strong></div>
+      <div class="links" style="margin-top: 14px;">
+        <a href="junit-funcional.xml">Open junit-funcional.xml</a>
+        <a href="pytest-funcional-summary.txt">Open pytest-funcional-summary.txt</a>
+        <a href="reports-index.html">Open reports-index.html</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 28%;">Class</th>
+            <th style="width: 24%;">Test</th>
+            <th style="width: 8%;">Time</th>
+            <th style="width: 10%;">Status</th>
+            <th style="width: 30%;">Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>tests.regression.reglas_negocio.test_funcional_reglas_negocio</td><td>test_relaciones_negocio_apuntan_a_tablas_existentes</td><td class='num'>0.012</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.regression.reglas_negocio.test_funcional_reglas_negocio</td><td>test_medidas_tienen_dax_no_vacio</td><td class='num'>0.014</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.regression.reglas_negocio.test_funcional_reglas_negocio</td><td>test_tabla_hecho_tiene_columna_numerica</td><td class='num'>0.015</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr><tr><td>tests.regression.reglas_negocio.test_funcional_reglas_negocio</td><td>test_export_excel_mantiene_consistencia_de_tablas</td><td class='num'>0.420</td><td><span class='badge ok'>passed</span></td><td><pre></pre></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

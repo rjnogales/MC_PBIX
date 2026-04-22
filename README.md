@@ -194,6 +194,40 @@ Estructura de pruebas creada:
 - zCODE/.coveragerc
 - zCODE/requirements-test.txt
 
+
+### Matriz de pruebas unitarias (26)
+
+| # | Script de prueba | Caso | Validacion principal |
+|---|---|---|---|
+| 1 | zCODE/tests/unit/test_01_leer_tablas.py | test_leer_tablas_excluye_tecnicas | Excluye tablas tecnicas y no tmdl. |
+| 2 | zCODE/tests/unit/test_01_leer_tablas.py | test_leer_tablas_lanza_si_no_existe_directorio | Error si no existe Model/tables. |
+| 3 | zCODE/tests/unit/test_01_leer_tablas.py | test_leer_tablas_vacio | Retorna lista vacia sin tablas validas. |
+| 4 | zCODE/tests/unit/test_02_leer_columnas.py | test_leer_columnas_extrae_tabla_columna_tipo | Extrae tabla, columna y dataType. |
+| 5 | zCODE/tests/unit/test_02_leer_columnas.py | test_leer_columnas_excluye_tecnicas | Ignora LocalDateTable y DateTableTemplate. |
+| 6 | zCODE/tests/unit/test_02_leer_columnas.py | test_leer_columnas_ignora_si_no_hay_data_type | Omite columnas sin dataType. |
+| 7 | zCODE/tests/unit/test_02_leer_columnas.py | test_leer_columnas_lanza_si_no_existe_directorio | Error por ruta inexistente. |
+| 8 | zCODE/tests/unit/test_03_leer_medidas.py | test_limpiar_dax_remueve_prefijos_y_metadatos | Limpia prefijos y metadatos del DAX. |
+| 9 | zCODE/tests/unit/test_03_leer_medidas.py | test_leer_medidas_extrae_medida_dax | Extrae medida y DAX correctamente. |
+| 10 | zCODE/tests/unit/test_03_leer_medidas.py | test_leer_medidas_devuelve_vacio_sin_cierre_parentesis | No registra medida sin cierre de expresion. |
+| 11 | zCODE/tests/unit/test_03_leer_medidas.py | test_leer_medidas_lanza_si_no_existe_directorio | Error por directorio inexistente. |
+| 12 | zCODE/tests/unit/test_04_leer_relaciones.py | test_leer_relaciones_parsea_referencias_con_comillas_y_brackets | Parsea comillas, brackets y formato con punto. |
+| 13 | zCODE/tests/unit/test_04_leer_relaciones.py | test_leer_relaciones_sin_punto_devuelve_columna_vacia | Si no hay punto, deja columna origen vacia. |
+| 14 | zCODE/tests/unit/test_04_leer_relaciones.py | test_leer_relaciones_lanza_si_no_existe_archivo | Error si falta relationships.tmdl. |
+| 15 | zCODE/tests/unit/test_05_exportar_excel.py | test_clasificar_tabla_nombre | Heuristica HECHO, DIMENSION, OTRO por nombre. |
+| 16 | zCODE/tests/unit/test_05_exportar_excel.py | test_clasificar_tablas_y_columnas | Clasifica tablas y propaga tipo a columnas. |
+| 17 | zCODE/tests/unit/test_05_exportar_excel.py | test_clasificar_relaciones_y_glosario | Clasifica relaciones y valida estructura del glosario. |
+| 18 | zCODE/tests/unit/test_05_exportar_excel.py | test_exportar_excel_genera_archivo_y_hojas | Genera Excel con 5 hojas esperadas. |
+| 19 | zCODE/tests/unit/test_06_procesar_pbixs_unit.py | test_cargar_config_area_defaults | Carga configuracion por defecto. |
+| 20 | zCODE/tests/unit/test_06_procesar_pbixs_unit.py | test_cargar_config_area_override | Aplica override desde pipeline.json. |
+| 21 | zCODE/tests/unit/test_06_procesar_pbixs_unit.py | test_resolver_ruta_area_relativa_y_absoluta | Resuelve rutas relativas y absolutas. |
+| 22 | zCODE/tests/unit/test_06_procesar_pbixs_unit.py | test_metadata_corresponde_pbix | Verifica coincidencia de firma de metadata. |
+| 23 | zCODE/tests/unit/test_06_procesar_pbixs_unit.py | test_leer_y_guardar_metadata_extraccion | Guarda y lee metadata de extraccion. |
+| 24 | zCODE/tests/unit/test_06_procesar_pbixs_unit.py | test_descomponer_pbix_reutiliza_metadata | Reutiliza descomposicion vigente por metadata. |
+| 25 | zCODE/tests/unit/test_06_procesar_pbixs_unit.py | test_procesar_pbix_ok | Flujo completo exitoso de procesamiento. |
+| 26 | zCODE/tests/unit/test_06_procesar_pbixs_unit.py | test_procesar_pbix_falla_si_no_hay_model | Falla controlada si no existe Model/tables. |
+
+
+
 ### Ejecutar pruebas (Windows)
 
 Desde la raiz del proyecto:
@@ -202,33 +236,45 @@ Desde la raiz del proyecto:
 
 python -m pip install -r zCODE/requirements-test.txt
 
-2. Ejecutar pruebas unitarias con cobertura:
+2. Ejecutar suite por defecto (unitarias + funcionales + regresion, sin cobertura obligatoria):
+
+python -m pytest -c zCODE/pytest.ini -q
+
+3. Ejecutar suite por defecto con cobertura y umbral (90%):
+
+python -m pytest -c zCODE/pytest.ini -q --cov=. --cov-config=zCODE/.coveragerc --cov-report=term-missing --cov-report=html --cov-fail-under=90
+
+4. Ejecutar solo pruebas unitarias:
 
 python -m pytest -c zCODE/pytest.ini zCODE/tests/unit -q
 
-3. Generar vista HTML amigable de JUnit y actualizar enlaces en htmlcov/index.html:
-
-python zCODE/tests/reports/postprocess_reports.py
-
-4. Ejecutar pruebas funcionales (punto 2: reglas de negocio):
+5. Ejecutar solo pruebas funcionales (reglas de negocio):
 
 python -m pytest -c zCODE/pytest.ini zCODE/tests/regression/reglas_negocio -q -m functional -o "addopts=-v --tb=short --strict-markers"
 
-5. Ejecutar pruebas de regresion contra referencia (punto 4):
+6. Ejecutar solo pruebas de regresion contra referencia:
 
 python -m pytest -c zCODE/pytest.ini zCODE/tests/regression/regresion_referencia -q -m regression -o "addopts=-v --tb=short --strict-markers"
 
-6. Generar evidencia XML/TXT de funcional:
+7. Generar vista HTML amigable de JUnit y actualizar enlaces en htmlcov/index.html (tambien crea htmlcov/cobertura-index.html):
+
+python zCODE/tests/reports/postprocess_reports.py
+
+8. Generar evidencia XML/TXT de funcional:
 
 python -m pytest -c zCODE/pytest.ini zCODE/tests/regression/reglas_negocio -q -m functional -o "addopts=-v --tb=short --strict-markers" --junitxml=zCODE/tests/reports/junit-funcional.xml | tee zCODE/tests/reports/pytest-funcional-summary.txt
 
-7. Generar evidencia XML/TXT de regresion de referencia:
+9. Generar evidencia XML/TXT de regresion de referencia:
 
 python -m pytest -c zCODE/pytest.ini zCODE/tests/regression/regresion_referencia -q -m regression -o "addopts=-v --tb=short --strict-markers" --junitxml=zCODE/tests/reports/junit-regresion-referencia.xml | tee zCODE/tests/reports/pytest-regresion-referencia-summary.txt
 
-Atajo en una sola linea (ejecuta pruebas y luego postproceso):
+Atajo en una sola linea (suite por defecto + postproceso):
 
-python -m pytest -c zCODE/pytest.ini zCODE/tests/unit -q --junitxml=zCODE/tests/reports/junit.xml && python zCODE/tests/reports/postprocess_reports.py
+python -m pytest -c zCODE/pytest.ini -q --junitxml=zCODE/tests/reports/junit.xml && python zCODE/tests/reports/postprocess_reports.py
+
+Atajo en una sola linea (suite con cobertura + postproceso):
+
+python -m pytest -c zCODE/pytest.ini -q --cov=. --cov-config=zCODE/.coveragerc --cov-report=term-missing --cov-report=html --cov-fail-under=90 --junitxml=zCODE/tests/reports/junit.xml && python zCODE/tests/reports/postprocess_reports.py
 
 Atajo recomendado de control completo (unitario + funcional + regresion + postproceso):
 
@@ -239,6 +285,10 @@ Notas:
 - La configuracion de cobertura del MVP excluye tests y scripts fuera de alcance del objetivo actual.
 - Las pruebas se ejecutan con datos sinteticos y no requieren PBIX reales.
 - El reporte JUnit amigable queda en zCODE/tests/reports/junit-report.html.
+- El indice unificado de resultados queda en zCODE/tests/reports/reports-index.html.
+- La portada de cobertura se puede abrir con htmlcov/cobertura-index.html (alias de htmlcov/index.html).
+- En GitHub, abrir estos .html desde el repositorio muestra el codigo fuente; para verlos renderizados se recomienda GitHub Pages o descargar/artifact del pipeline y abrir localmente.
+- Para GitHub Pages se recomienda usar una sola puerta de entrada: zCODE/tests/reports/reports-index.html (desde ahi se enlaza tambien a cobertura).
 
 Clasificacion oficial de fases:
 

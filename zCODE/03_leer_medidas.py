@@ -4,14 +4,13 @@ import os
 
 
 def limpiar_dax(dax):
-    """
-    Limpia texto DAX removiendo fragmentos de metadatos TMDL.
+    """Clean DAX text by removing TMDL metadata fragments.
 
-    Parametros:
-        dax (str): Texto acumulado de la expresion.
+    Args:
+        dax: Accumulated expression text extracted from TMDL.
 
-    Retorna:
-        str: Expresion DAX depurada.
+    Returns:
+        str: Cleaned DAX expression.
     """
 
     cortes = [
@@ -28,7 +27,7 @@ def limpiar_dax(dax):
     if posiciones:
         dax = dax[:min(posiciones)]
 
-    # 🔧 limpiar "=" repetidos
+    # Algunas extracciones dejan varios signos igual al inicio de la expresion.
     dax = dax.strip()
 
     while dax.startswith("="):
@@ -38,18 +37,21 @@ def limpiar_dax(dax):
 
 
 def leer_medidas(ruta_pbix):
-    """
-    Extrae medidas y su expresion DAX por tabla.
+    """Extract measures and DAX expressions from table TMDL files.
 
-    Parametros:
-        ruta_pbix (str): Ruta raiz del PBIX descompuesto.
+    Args:
+        ruta_pbix: Root path of the decomposed PBIX structure.
 
-    Retorna:
-        list[dict]: Registros con tabla, medida y dax.
+    Returns:
+        list[dict]: Records with table, measure name, and DAX.
+
+    Raises:
+        FileNotFoundError: If Model/tables does not exist.
     """
 
     ruta_tablas = os.path.join(ruta_pbix, "Model", "tables")
 
+    # Las medidas viven dentro de los .tmdl de cada tabla.
     if not os.path.exists(ruta_tablas):
         raise FileNotFoundError(f"No existe la ruta: {ruta_tablas}")
 
@@ -67,6 +69,7 @@ def leer_medidas(ruta_pbix):
         with open(ruta_archivo, "r", encoding="utf-8", errors="ignore") as f:
             lineas = f.readlines()
 
+        # La expresion DAX puede ocupar varias lineas hasta cerrar el bloque.
         medida_actual = None
         dax_acumulado = []
 
@@ -88,6 +91,7 @@ def leer_medidas(ruta_pbix):
 
                 # cierre heurístico
                 if linea_strip.endswith(")"):
+                    # Se normaliza al final para evitar mezclar DAX con metadatos TMDL.
                     dax = " ".join(dax_acumulado)
                     dax = limpiar_dax(dax)
 
