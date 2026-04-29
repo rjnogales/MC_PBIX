@@ -15,6 +15,10 @@
     a:hover { text-decoration:underline; }
     ul { margin:8px 0 0; }
     li { margin:6px 0; }
+    .table-wrap { overflow-x:auto; margin-top:14px; }
+    table { width:100%; border-collapse:collapse; min-width:760px; }
+    th, td { border:1px solid var(--line); padding:10px 12px; text-align:left; vertical-align:top; }
+    th { background:#f7e7d8; color:var(--accent); }
   </style>
 </head>
 <body>
@@ -32,26 +36,109 @@
           <h3>Bronze</h3>
           <p>Capa de datos base con trazabilidad y definiciones de estructura minima.</p>
           <ul>
-            <li>Claves canonicas</li>
-            <li>Especificacion Bronze minima</li>
+            <li>Claves canonicas: identifica PK y FK para reconstruir el modelo relacional base.</li>
+            <li>Especificacion Bronze minima: define objetos, campos, tipos y trazabilidad para carga inicial.</li>
           </ul>
         </article>
         <article>
           <h3>Silver</h3>
           <p>Capa de refinamiento semantico, entidades, relaciones y politicas de historizacion.</p>
           <ul>
-            <li>Entidades canonicas</li>
-            <li>Historizacion</li>
-            <li>Paquete Silver</li>
+            <li>Entidades canonicas: organiza entidades y atributos en lenguaje uniforme de negocio.</li>
+            <li>Claves: conecta entidades sin ambiguedad con llaves primarias y foraneas.</li>
+            <li>Particionado: define division fisica por fecha, periodo o entidad para mejorar rendimiento.</li>
+            <li>Historizacion: establece como conservar cambios en el tiempo por entidad o atributo.</li>
+            <li>Paquete Silver: consolida artefactos finales listos para entrega y publicacion tecnica.</li>
           </ul>
         </article>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Capa</th>
+              <th>Que es</th>
+              <th>Para que sirve</th>
+              <th>Que conserva</th>
+              <th>Que agrega</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>PBIX</td>
+              <td>Modelo original de Power BI.</td>
+              <td>Analizar y visualizar informacion.</td>
+              <td>Tablas, columnas, medidas, relaciones y semantica del modelo.</td>
+              <td>Visuales, DAX, filtros y comportamiento analitico.</td>
+            </tr>
+            <tr>
+              <td>Bronze</td>
+              <td>Aterrizaje estructural y trazable del modelo.</td>
+              <td>Llevar el PBIX a una base de datos utilizable.</td>
+              <td>Tablas, columnas, tipos base, origen y trazabilidad.</td>
+              <td>Convencion tecnica de carga y especificacion minima de objetos.</td>
+            </tr>
+            <tr>
+              <td>Silver</td>
+              <td>Refinamiento del modelo para consumo.</td>
+              <td>Preparar el uso analitico y el modelado posterior.</td>
+              <td>La base estructural util heredada de Bronze.</td>
+              <td>Entidades, claves, particionado, historizacion y paquete analitico.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Artefacto</th>
+              <th>Capa</th>
+              <th>Que organiza</th>
+              <th>Para que sirve</th>
+              <th>Resultado principal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Claves canonicas</td>
+              <td>Bronze</td>
+              <td>PK, FK y atributos marcados del modelo.</td>
+              <td>Identificar como se conectan las tablas y cuales campos actuan como llaves.</td>
+              <td>Base relacional inicial para reconstruir el modelo estructural.</td>
+            </tr>
+            <tr>
+              <td>Especificacion Bronze minima</td>
+              <td>Bronze</td>
+              <td>Objetos Bronze, campos, tipos y trazabilidad.</td>
+              <td>Definir que tablas tecnicas se crean y que columnas se cargan desde el origen.</td>
+              <td>Contrato minimo para aterrizar el modelo PBIX en base de datos.</td>
+            </tr>
+            <tr>
+              <td>Entidades canonicas</td>
+              <td>Silver</td>
+              <td>Entidades, atributos y relaciones canonicas.</td>
+              <td>Traducir la estructura del PBIX a un lenguaje de negocio mas uniforme.</td>
+              <td>Modelo logico refinado para consumo analitico.</td>
+            </tr>
+            <tr>
+              <td>Historizacion</td>
+              <td>Silver</td>
+              <td>Politica temporal por entidad y atributo.</td>
+              <td>Definir que informacion debe conservar cambios en el tiempo y con que estrategia.</td>
+              <td>Base para seguimiento historico y analitica evolutiva.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
     <section class="card">
       <h2>Ejemplos incluidos en el reporte</h2>
       <ul>
-        <li><a href="Ejemplos_Tablas_PBIX/JAMA_1_%20Power%20BI%20EPSO%204.xlsx">Ejemplo PBIX: diccionario tecnico</a></li>
+        <li><a href="Ejemplos_Tablas_PBIX/JAMA_1_ Power BI EPSO 4.xlsx">Ejemplo PBIX: diccionario tecnico</a></li>
         <li><a href="Ejemplos_Bronze/12_ClavesCanonicas_OFICINA_EVALUACION_20260423_142004.xlsx">Ejemplo Bronze: claves canonicas</a></li>
         <li><a href="Ejemplos_Bronze/15_BronzeMinima_OFICINA_EVALUACION_20260423_142011.xlsx">Ejemplo Bronze: especificacion minima</a></li>
         <li><a href="Ejemplos_Silver/11_EntidadesCanonicas_OFICINA_EVALUACION_20260423_142002.xlsx">Ejemplo Silver: entidades canonicas</a></li>
@@ -69,5 +156,19 @@
       </ul>
     </section>
   </div>
+  <script>
+    (function () {
+      document.addEventListener("click", function (event) {
+        var link = event.target.closest("a[href]");
+        if (!link) return;
+        var href = link.getAttribute("href");
+        if (!href) return;
+        if (/\.(py|xlsx|xls)$/i.test(href)) {
+          event.preventDefault();
+          window.location.href = "visor_archivos.html?file=" + encodeURIComponent(href);
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

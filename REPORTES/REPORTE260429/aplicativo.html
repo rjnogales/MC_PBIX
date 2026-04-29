@@ -101,5 +101,19 @@
       </ul>
     </section>
   </div>
+  <script>
+    (function () {
+      document.addEventListener("click", function (event) {
+        var link = event.target.closest("a[href]");
+        if (!link) return;
+        var href = link.getAttribute("href");
+        if (!href) return;
+        if (/\.(py|xlsx|xls)$/i.test(href)) {
+          event.preventDefault();
+          window.location.href = "visor_archivos.html?file=" + encodeURIComponent(href);
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

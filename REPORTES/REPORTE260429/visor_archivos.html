@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>REPORTE260429 - Visor de Archivos</title>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <style>
+    :root { --bg:#f8fafc; --card:#ffffff; --ink:#1f2937; --muted:#4b5563; --line:#dbe5e2; --accent:#0b7285; }
+    body { margin:0; font-family: Segoe UI, Tahoma, Arial, sans-serif; background:var(--bg); color:var(--ink); }
+    .wrap { max-width: 1200px; margin: 20px auto; padding: 0 16px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; margin-bottom:14px; }
+    h1, h2 { margin-top:0; color:var(--accent); }
+    p { color:var(--muted); }
+    .topbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .btn { display:inline-block; padding:8px 12px; border:1px solid var(--line); border-radius:8px; text-decoration:none; color:#0b7285; background:#fff; }
+    .btn:hover { text-decoration:underline; }
+    .meta { font-size:13px; color:var(--muted); }
+    table { border-collapse:collapse; width:100%; }
+    th, td { border:1px solid #e5e7eb; padding:6px 8px; text-align:left; vertical-align:top; }
+    pre { margin:0; overflow:auto; border:1px solid #e5e7eb; border-radius:8px; }
+    #status { margin:0; font-size:14px; }
+    #sheet-selector { padding:6px; border:1px solid #cbd5e1; border-radius:6px; }
+    #viewer { overflow-x:auto; overflow-y:auto; background:#fff; }
+    #viewer table { width:max-content; min-width:100%; background:#fff; }
+    #viewer th, #viewer td { white-space:nowrap; background:#fff; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card">
+      <div class="topbar">
+        <a class="btn" href="javascript:history.back()">Volver</a>
+        <a class="btn" href="index.html">Portada del reporte</a>
+      </div>
+      <h1>Visor de Archivos</h1>
+      <p id="status">Cargando archivo...</p>
+      <p class="meta" id="file-name"></p>
+    </section>
+
+    <section class="card" id="excel-controls" style="display:none;">
+      <h2>Hoja</h2>
+      <select id="sheet-selector"></select>
+    </section>
+
+    <section class="card" id="viewer"></section>
+  </div>
+
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const file = params.get("file");
+      const statusEl = document.getElementById("status");
+      const fileNameEl = document.getElementById("file-name");
+      const viewerEl = document.getElementById("viewer");
+      const excelControlsEl = document.getElementById("excel-controls");
+      const sheetSelectorEl = document.getElementById("sheet-selector");
+
+      if (!file) {
+        statusEl.textContent = "No se recibio archivo para visualizar.";
+        viewerEl.innerHTML = "<p>Abra esta pagina desde un enlace .py o .xlsx del reporte.</p>";
+        return;
+      }
+
+      const cleanFile = file;
+      fileNameEl.textContent = "Archivo: " + cleanFile;
+
+      function renderExcel(buffer) {
+        var workbook;
+        try {
+          workbook = XLSX.read(new Uint8Array(buffer), {
+            type: "array",
+            cellDates: true,
+            dense: true
+          });
+        } catch (parseErr) {
+          throw new Error("No fue posible interpretar el archivo Excel. Verifique que el archivo no este corrupto.");
+        }
+        const names = workbook.SheetNames || [];
+        if (!names.length) {
+          statusEl.textContent = "El libro no contiene hojas.";
+          return;
+        }
+
+        excelControlsEl.style.display = "block";
+        sheetSelectorEl.innerHTML = names.map(function (name) {
+          return "<option value=\"" + name.replace(/\"/g, "&quot;") + "\">" + name + "</option>";
+        }).join("");
+
+        function drawSheet(name) {
+          const ws = workbook.Sheets[name];
+          viewerEl.innerHTML = XLSX.utils.sheet_to_html(ws);
+          statusEl.textContent = "Excel cargado correctamente.";
+        }
+
+        sheetSelectorEl.addEventListener("change", function () {
+          drawSheet(sheetSelectorEl.value);
+        });
+
+        drawSheet(names[0]);
+      }
+
+      function renderPython(text) {
+        const code = document.createElement("code");
+        code.className = "language-python";
+        code.textContent = text;
+        const pre = document.createElement("pre");
+        pre.className = "language-python";
+        pre.appendChild(code);
+        viewerEl.innerHTML = "";
+        viewerEl.appendChild(pre);
+        Prism.highlightElement(code);
+        statusEl.textContent = "Script Python cargado correctamente.";
+      }
+
+      function fetchFirstAvailable(urls) {
+        var index = 0;
+        function next() {
+          if (index >= urls.length) {
+            return Promise.reject(new Error("No se pudo abrir el archivo con las rutas disponibles."));
+          }
+          var current = urls[index++];
+          return fetch(current).then(function (res) {
+            if (!res.ok) {
+              return next();
+            }
+            return res;
+          }).catch(function () {
+            return next();
+          });
+        }
+        return next();
+      }
+
+      function loadExcelBuffer(urls) {
+        return fetchFirstAvailable(urls)
+          .then(function (res) {
+            return res.arrayBuffer();
+          })
+          .catch(function () {
+            return new Promise(function (resolve, reject) {
+              var index = 0;
+              function nextXhr() {
+                if (index >= urls.length) {
+                  reject(new Error("No se pudo leer el Excel por fetch ni por XHR."));
+                  return;
+                }
+                var current = urls[index++];
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", current, true);
+                xhr.responseType = "arraybuffer";
+                xhr.onload = function () {
+                  if (xhr.status >= 200 && xhr.status < 300 && xhr.response) {
+                    resolve(xhr.response);
+                    return;
+                  }
+                  nextXhr();
+                };
+                xhr.onerror = function () {
+                  nextXhr();
+                };
+                xhr.send();
+              }
+              nextXhr();
+            });
+          });
+      }
+
+      var candidates = [cleanFile, encodeURI(cleanFile)];
+
+      (/(xlsx|xls)$/i.test(cleanFile)
+        ? loadExcelBuffer(candidates).then(function (buf) { return { kind: "excel", data: buf }; })
+        : fetchFirstAvailable(candidates).then(function (res) {
+            if (!res.ok) {
+              throw new Error("No se pudo abrir el archivo (" + res.status + ").");
+            }
+            return res.text().then(function (txt) { return { kind: "python", data: txt }; });
+          })
+      )
+        .then(function (payload) {
+          if (payload.kind === "excel") {
+            renderExcel(payload.data);
+          } else {
+            renderPython(payload.data);
+          }
+        })
+        .catch(function (err) {
+          statusEl.textContent = "Error al cargar el archivo.";
+          viewerEl.innerHTML = "<p>" + err.message + "</p><p>Ruta solicitada: " + cleanFile + "</p><p>Tip: pruebe recargar la pagina con Ctrl+F5.</p>";
+        });
+    })();
+  </script>
+</body>
+</html>
