@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>REPORTE260429 - Control de Garantias</title>
+  <style>
+    :root { --bg:#f6f7fb; --card:#fff; --ink:#111827; --muted:#4b5563; --line:#d7dce4; --accent:#1d4ed8; }
+    body { margin:0; font-family: Segoe UI, Tahoma, Arial, sans-serif; background:var(--bg); color:var(--ink); }
+    .wrap { max-width: 1120px; margin:22px auto; padding:0 16px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; margin-bottom:14px; }
+    h1, h2 { margin-top:0; color:var(--accent); }
+    .kpis { display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); margin-top:8px; }
+    .kpi { border:1px solid #dbeafe; border-radius:10px; padding:10px; background:#eff6ff; }
+    .num { font-size:22px; font-weight:700; }
+    a { color:#0b7285; text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    ul { margin:8px 0 0; }
+    li { margin:6px 0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card">
+      <h1>CONTROL DE GARANTIAS</h1>
+      <p>Consolidado de evidencia tecnica del estado de pruebas y cobertura del proyecto.</p>
+      <p><a href="index.html">Volver a portada del reporte</a></p>
+
+      <div class="kpis">
+        <div class="kpi"><div class="num">26</div><div>Pruebas ejecutadas</div></div>
+        <div class="kpi"><div class="num">0</div><div>Pruebas fallidas</div></div>
+        <div class="kpi"><div class="num">98.12%</div><div>Cobertura alcanzada</div></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Evidencia de resultados de pruebas</h2>
+      <ul>
+        <li><a href="../../zCODE/tests/reports/reports-index.html">Indice de reportes de pruebas</a></li>
+        <li><a href="../../zCODE/tests/reports/junit-report.html">Reporte JUnit principal</a></li>
+        <li><a href="../../zCODE/tests/reports/pytest-summary.txt">Resumen de pruebas (texto)</a></li>
+        <li><a href="../../zCODE/tests/reports/junit-funcional-report.html">Reporte funcional</a></li>
+        <li><a href="../../zCODE/tests/reports/junit-regresion-referencia-report.html">Reporte regresion de referencia</a></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Evidencia de cobertura</h2>
+      <ul>
+        <li><a href="../../zCODE/htmlcov/index.html">Cobertura HTML (index)</a></li>
+        <li><a href="../../zCODE/htmlcov/cobertura-index.html">Cobertura HTML (cobertura-index)</a></li>
+        <li><a href="../../zCODE/htmlcov/function_index.html">Cobertura por funcion</a></li>
+        <li><a href="../../zCODE/htmlcov/class_index.html">Cobertura por archivo</a></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Referencias de origen</h2>
+      <ul>
+        <li><a href="../../README_EJECUTIVO.md">README_EJECUTIVO.md</a></li>
+        <li><a href="../../zCODE/tests/reports/">zCODE/tests/reports</a></li>
+        <li><a href="../../zCODE/htmlcov/">zCODE/htmlcov</a></li>
+      </ul>
+    </section>
+  </div>
+</body>
+</html>

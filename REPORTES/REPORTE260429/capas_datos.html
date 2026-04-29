@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>REPORTE260429 - Capas de Datos</title>
+  <style>
+    :root { --bg:#faf7f3; --card:#fff; --ink:#1f2937; --muted:#4b5563; --line:#e7ddcf; --accent:#9a3412; }
+    body { margin:0; font-family: Segoe UI, Tahoma, Arial, sans-serif; background:var(--bg); color:var(--ink); }
+    .wrap { max-width:1120px; margin:22px auto; padding:0 16px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; margin-bottom:14px; }
+    h1, h2 { margin-top:0; color:var(--accent); }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }
+    a { color:#0b7285; text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    ul { margin:8px 0 0; }
+    li { margin:6px 0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card">
+      <h1>CAPAS DE DATOS</h1>
+      <p>Resumen funcional de capas de datos y evidencia de artefactos del reporte.</p>
+      <p><a href="index.html">Volver a portada del reporte</a></p>
+    </section>
+
+    <section class="card">
+      <h2>Estructura de capas</h2>
+      <div class="grid">
+        <article>
+          <h3>Bronze</h3>
+          <p>Capa de datos base con trazabilidad y definiciones de estructura minima.</p>
+          <ul>
+            <li>Claves canonicas</li>
+            <li>Especificacion Bronze minima</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Silver</h3>
+          <p>Capa de refinamiento semantico, entidades, relaciones y politicas de historizacion.</p>
+          <ul>
+            <li>Entidades canonicas</li>
+            <li>Historizacion</li>
+            <li>Paquete Silver</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Ejemplos incluidos en el reporte</h2>
+      <ul>
+        <li><a href="Ejemplos_Tablas_PBIX/JAMA_1_%20Power%20BI%20EPSO%204.xlsx">Ejemplo PBIX: diccionario tecnico</a></li>
+        <li><a href="Ejemplos_Bronze/12_ClavesCanonicas_OFICINA_EVALUACION_20260423_142004.xlsx">Ejemplo Bronze: claves canonicas</a></li>
+        <li><a href="Ejemplos_Bronze/15_BronzeMinima_OFICINA_EVALUACION_20260423_142011.xlsx">Ejemplo Bronze: especificacion minima</a></li>
+        <li><a href="Ejemplos_Silver/11_EntidadesCanonicas_OFICINA_EVALUACION_20260423_142002.xlsx">Ejemplo Silver: entidades canonicas</a></li>
+        <li><a href="Ejemplos_Silver/14_HistorizacionSilver_OFICINA_EVALUACION_20260423_142009.xlsx">Ejemplo Silver: historizacion</a></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Referencias de origen verificables</h2>
+      <ul>
+        <li><a href="../../OFICINA_EVALUACION/PBIXs_output/consolidado/">Fuente consolidado</a></li>
+        <li><a href="../../OFICINA_EVALUACION/PBIXs_output/normalizado/">Fuente normalizado</a></li>
+        <li><a href="../../OFICINA_EVALUACION/PBIXs_output/silver/">Fuente silver</a></li>
+        <li><a href="../../OFICINA_EVALUACION/PBIXs_output/diccionarios_pbix/">Fuente diccionarios por PBIX</a></li>
+      </ul>
+    </section>
+  </div>
+</body>
+</html>

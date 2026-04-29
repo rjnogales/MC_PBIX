@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>REPORTE260429 - Aplicativo</title>
+  <style>
+    :root { --bg:#f7faf9; --card:#ffffff; --ink:#1f2937; --muted:#4b5563; --line:#dbe5e2; --accent:#166534; }
+    body { margin:0; font-family: Segoe UI, Tahoma, Arial, sans-serif; background:var(--bg); color:var(--ink); }
+    .wrap { max-width: 1120px; margin: 22px auto; padding: 0 16px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; margin-bottom:14px; }
+    h1, h2 { margin-top:0; color:var(--accent); }
+    ul { margin:8px 0 0; }
+    li { margin:6px 0; }
+    a { color:#0b7285; text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .row { display:grid; grid-template-columns: 1fr; gap:14px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card">
+      <h1>APLICATIVO</h1>
+      <p>Descripcion funcional de la estructura del aplicativo PBIX Analytics y su flujo operativo.</p>
+      <p><a href="index.html">Volver a portada del reporte</a></p>
+    </section>
+
+    <section class="card">
+      <h2>Estructura de carpetas del aplicativo</h2>
+      <ul>
+        <li><a href="../../OFICINA_EVALUACION/">OFICINA_EVALUACION</a>: area operativa con configuracion, entradas y salidas.</li>
+        <li><a href="../../OFICINA_EVALUACION/PBIXs/index.html">OFICINA_EVALUACION/PBIXs</a>: carpeta de entrada para archivos PBIX del area.</li>
+        <li><a href="../../OFICINA_PRESIDENCIA/">OFICINA_PRESIDENCIA</a>: segunda area operativa con estructura equivalente.</li>
+        <li><a href="../../OFICINA_PRESIDENCIA/PBIXs/">OFICINA_PRESIDENCIA/PBIXs</a>: carpeta de entrada para archivos PBIX del area.</li>
+        <li><a href="../../zCODE/">zCODE</a>: codigo fuente del pipeline (scripts de extraccion, transformacion y empaquetado).</li>
+        <li>REPORTES: indice global de reportes por fecha.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Componentes del pipeline</h2>
+
+      <h3>Scripts del aplicativo</h3>
+      <ul>
+        <li><a href="../../zCODE/01_leer_tablas.py">01_leer_tablas.py</a>: extrae el listado de tablas del modelo PBIX.</li>
+        <li><a href="../../zCODE/02_leer_columnas.py">02_leer_columnas.py</a>: extrae columnas y tipos de dato por tabla.</li>
+        <li><a href="../../zCODE/03_leer_medidas.py">03_leer_medidas.py</a>: extrae medidas y expresiones DAX del modelo.</li>
+        <li><a href="../../zCODE/04_leer_relaciones.py">04_leer_relaciones.py</a>: extrae relaciones entre tablas del modelo.</li>
+        <li><a href="../../zCODE/05_exportar_excel.py">05_exportar_excel.py</a>: exporta el diccionario tecnico consolidado a Excel.</li>
+        <li><a href="../../zCODE/06_procesar_pbixs.py">06_procesar_pbixs.py</a>: ejecuta el flujo tecnico completo para cada PBIX.</li>
+        <li><a href="../../zCODE/07_definir_area.py">07_definir_area.py</a>: selecciona el area y dispara el procesamiento.</li>
+        <li><a href="../../zCODE/09_unificar_diccionarios.py">09_unificar_diccionarios.py</a>: unifica diccionarios por PBIX en un consolidado unico.</li>
+        <li><a href="../../zCODE/10_normalizar_nombres_tipos.py">10_normalizar_nombres_tipos.py</a>: estandariza nombres y tipos para homogeneidad tecnica.</li>
+      </ul>
+
+      <h3>Scripts de test</h3>
+      <ul>
+        <li><a href="../../zCODE/tests/unit/test_01_leer_tablas.py">test_01_leer_tablas.py</a>: valida lectura correcta de tablas.</li>
+        <li><a href="../../zCODE/tests/unit/test_02_leer_columnas.py">test_02_leer_columnas.py</a>: valida lectura de columnas y tipos.</li>
+        <li><a href="../../zCODE/tests/unit/test_03_leer_medidas.py">test_03_leer_medidas.py</a>: valida lectura de medidas DAX.</li>
+        <li><a href="../../zCODE/tests/unit/test_04_leer_relaciones.py">test_04_leer_relaciones.py</a>: valida lectura de relaciones entre tablas.</li>
+        <li><a href="../../zCODE/tests/unit/test_05_exportar_excel.py">test_05_exportar_excel.py</a>: valida estructura y salida del Excel generado.</li>
+        <li><a href="../../zCODE/tests/unit/test_06_procesar_pbixs_unit.py">test_06_procesar_pbixs_unit.py</a>: valida la orquestacion unitaria del procesamiento.</li>
+        <li><a href="../../zCODE/tests/regression/reglas_negocio/test_funcional_reglas_negocio.py">test_funcional_reglas_negocio.py</a>: verifica reglas funcionales del negocio en el flujo.</li>
+        <li><a href="../../zCODE/tests/regression/regresion_referencia/test_regresion_referencia.py">test_regresion_referencia.py</a>: compara resultados con referencia para detectar regresiones.</li>
+      </ul>
+
+      <h3>Scripts de capas de datos</h3>
+      <ul>
+        <li><a href="../../zCODE/11_entidades_canonicas.py">11_entidades_canonicas.py</a>: define entidades y atributos canonicos de la capa de datos.</li>
+        <li><a href="../../zCODE/12_definir_claves.py">12_definir_claves.py</a>: infiere claves primarias y foraneas del modelo canonico.</li>
+        <li><a href="../../zCODE/13_definir_particionado.py">13_definir_particionado.py</a>: propone estrategia de particionado por entidad y volumen.</li>
+        <li><a href="../../zCODE/14_definir_historizacion.py">14_definir_historizacion.py</a>: define politica de historizacion por tipo de entidad.</li>
+        <li><a href="../../zCODE/15_generar_bronze_minima.py">15_generar_bronze_minima.py</a>: genera la especificacion minima de la capa Bronze.</li>
+        <li><a href="../../zCODE/16_paquete_silver.py">16_paquete_silver.py</a>: empaqueta artefactos finales de la capa Silver.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Flujo operativo</h2>
+      <ul>
+        <li>Entrada: archivos PBIX en <a href="../../OFICINA_EVALUACION/PBIXs/index.html">OFICINA_EVALUACION/PBIXs</a>.</li>
+        <li>Intermedio: descomposicion en <a href="../../OFICINA_EVALUACION/PBIXs_descompuestos/index.html">OFICINA_EVALUACION/PBIXs_descompuestos</a>.</li>
+      </ul>
+
+      <h2>Salida tecnica utilizada por el aplicativo</h2>
+      <ul>
+        <li><a href="../../OFICINA_EVALUACION/PBIXs_output/diccionarios_pbix/index.html">diccionarios_pbix</a>: diccionario tecnico por cada PBIX procesado.</li>
+        <li><a href="../../OFICINA_EVALUACION/PBIXs_output/consolidado/index.html">consolidado</a>: union de diccionarios del area en un solo archivo.</li>
+        <li><a href="../../OFICINA_EVALUACION/PBIXs_output/normalizado/index.html">normalizado</a>: estandarizacion de nombres y tipos para modelado.</li>
+        <li><a href="../../OFICINA_EVALUACION/PBIXs_output/silver/index.html">silver</a>: artefactos de entidades, claves, particionado, historizacion y paquete final.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Referencias de origen</h2>
+      <ul>
+        <li><a href="../../README.md">README.md</a></li>
+        <li><a href="../../README_EJECUTIVO.md">README_EJECUTIVO.md</a></li>
+        <li><a href="../../zCODE/">zCODE</a></li>
+      </ul>
+    </section>
+  </div>
+</body>
+</html>

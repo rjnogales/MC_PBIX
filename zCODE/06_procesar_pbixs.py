@@ -97,6 +97,7 @@ AREA_CONFIG = cargar_config_area(CONFIG_FILE)
 PBIX_DIR = resolver_ruta_area(AREA_DIR, AREA_CONFIG["paths"]["pbix_in"])
 DESCOMP_DIR = resolver_ruta_area(AREA_DIR, AREA_CONFIG["paths"]["pbix_descompuestos"])
 PBIX_OUTPUT_DIR = resolver_ruta_area(AREA_DIR, AREA_CONFIG["paths"]["output"])
+PBIX_DICCIONARIOS_DIR = PBIX_OUTPUT_DIR / "diccionarios_pbix"
 EXTRACT_META_FILENAME = ".extract_meta.json"
 
 LOG_FILE = resolver_ruta_area(AREA_DIR, AREA_CONFIG["paths"]["log_file"])
@@ -423,7 +424,7 @@ def procesar_pbix(pbix_file, leer_tablas, leer_columnas, leer_medidas, leer_rela
         log(f"📊 Tablas: {len(tablas)} | Columnas: {len(columnas)} | Medidas: {len(medidas)}")
 
         # El nombre del Excel coincide con la carpeta de descomposicion del PBIX.
-        output_file = PBIX_OUTPUT_DIR / f"{ruta.name}.xlsx"
+        output_file = PBIX_DICCIONARIOS_DIR / f"{ruta.name}.xlsx"
 
         exportar_excel(tablas, columnas, medidas, relaciones, output_file)
 
@@ -457,6 +458,7 @@ def main():
 
     DESCOMP_DIR.mkdir(parents=True, exist_ok=True)
     PBIX_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    PBIX_DICCIONARIOS_DIR.mkdir(parents=True, exist_ok=True)
 
     # Las funciones se cargan una vez para reutilizarlas en todo el lote.
     leer_tablas = cargar_funcion("01_leer_tablas.py", "leer_tablas")
