@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reportes - Indice Global</title>
+  <style>
+    :root { --bg:#f5f8f7; --card:#ffffff; --ink:#1f2937; --muted:#4b5563; --line:#d7e2df; --accent:#0f766e; }
+    body { margin:0; font-family: Segoe UI, Tahoma, Arial, sans-serif; background:linear-gradient(150deg,#edfdfa 0%, var(--bg) 45%); color:var(--ink); }
+    .wrap { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px; box-shadow:0 6px 20px rgba(15,118,110,.08); }
+    h1 { margin:0 0 8px; color:var(--accent); }
+    p { margin:0 0 14px; color:var(--muted); }
+    table { width:100%; border-collapse: collapse; }
+    th, td { padding:10px 8px; border-bottom:1px solid #e5e7eb; text-align:left; vertical-align:top; }
+    th { background:#ecfeff; }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card">
+      <h1>Indice Global de Reportes</h1>
+      <p>Listado cronologico de reportes. El orden prioriza la fecha de corte mas reciente.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha de corte</th>
+            <th>Codigo</th>
+            <th>Proyecto</th>
+            <th>Estado</th>
+            <th>Acceso</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2026-04-29</td>
+            <td>REPORTE260429</td>
+            <td>PBIX Analytics</td>
+            <td>Vigente</td>
+            <td><a href="REPORTES/REPORTE260429/index.html">Abrir reporte</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>
